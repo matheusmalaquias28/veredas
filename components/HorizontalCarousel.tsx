@@ -21,6 +21,8 @@ interface HorizontalCarouselProps {
   headerRowClassName?: string
   /** Classes extra no `<section>` (ex.: `-mt-8` para aproximar do carrossel anterior). */
   sectionClassName?: string
+  /** Margem inferior da régua (ex.: `mb-0` para colar no carrossel seguinte). Predefinição: `mb-4`. */
+  bottomRuleMbClass?: string
   children: ReactNode
 }
 
@@ -36,6 +38,7 @@ export default function HorizontalCarousel({
   titleBoxTextColor = '#ffffff',
   headerRowClassName,
   sectionClassName,
+  bottomRuleMbClass = 'mb-4',
 }: HorizontalCarouselProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -231,7 +234,7 @@ export default function HorizontalCarousel({
 
         {/* Bottom rule */}
         <div
-          className="mx-6 md:mx-10 mb-4 flex-shrink-0"
+          className={`mx-6 md:mx-10 flex-shrink-0 ${bottomRuleMbClass}`}
           style={{ height: '1px', background: 'rgba(0,0,0,0.08)' }}
         />
       </div>

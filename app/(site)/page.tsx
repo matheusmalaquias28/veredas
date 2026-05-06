@@ -67,6 +67,7 @@ export default async function HomePage({
           titleBoxColor="#DB260E"
           titleBoxTextColor="#FFABDB"
           headerRowClassName="pt-20 pb-3 md:pt-28 md:pb-2 mb-[20px]"
+          bottomRuleMbClass="mb-0"
         >
           {producoes.map((p: Parameters<typeof ProductionCard>[0]['producao']) => (
             <ProductionCard key={p._id} producao={p} />
@@ -82,8 +83,8 @@ export default async function HomePage({
           visibleCountDesktop={3}
           visibleCountMobile={1.2}
           titleBlueBox
-          sectionClassName="-mt-10 md:-mt-14"
-          headerRowClassName="pt-6 pb-5 md:pt-8 md:pb-6"
+          sectionClassName="-mt-[clamp(2.5rem,12vw,5.5rem)] md:-mt-28 lg:-mt-32"
+          headerRowClassName="pt-2 pb-2 md:pt-4 md:pb-3"
         >
           {atoresFiltrados.map((a) => (
             <ActorCard key={a._id} ator={a} />

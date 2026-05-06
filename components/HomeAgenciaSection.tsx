@@ -47,12 +47,12 @@ export default function HomeAgenciaSection({ imageUrl }: { imageUrl: string | nu
               writingMode: 'vertical-rl',
               textOrientation: 'mixed',
               fontFamily: 'var(--font-bebas)',
-              fontSize: 'clamp(9.5rem, 7vw, 5.5rem)',
+              fontSize: 'clamp(1.65rem, 3.2vw, 2.35rem)',
               fontWeight: 400,
               lineHeight: 1,
-              letterSpacing: '0.14em',
+              letterSpacing: '0.1em',
               color: 'transparent',
-              WebkitTextStroke: '1.5px #4277F6',
+              WebkitTextStroke: '1.25px #4277F6',
               WebkitTextFillColor: 'transparent',
             }}
           >

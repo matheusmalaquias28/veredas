@@ -1,35 +1,62 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import LogoVeredas from '@/components/LogoVeredas'
+const MIN_MS = 2000
+const TOTAL_STEPS = 100
+const DEFAULT_IMAGES = ['/sobre-agencia.png', '/Veredas_92.png']
 
-const MIN_MS = 1650
-
-const BRAND_BARS = [
-  'var(--brand-flame)',
-  'var(--brand-blue)',
-  'var(--brand-pink)',
-  'var(--brand-sun)',
-] as const
-
-export default function Preloader() {
+export default function Preloader({ images = [] }: { images?: string[] }) {
   const [visible, setVisible] = useState(true)
+  const [progress, setProgress] = useState(0)
+  const [imageIndex, setImageIndex] = useState(0)
+  const finalImages = useMemo(() => {
+    const validImages = images.filter((img) => Boolean(img))
+    return (validImages.length > 0 ? validImages : DEFAULT_IMAGES).slice(0, 5)
+  }, [images])
+
+  useEffect(() => {
+    if (imageIndex >= finalImages.length) {
+      setImageIndex(0)
+    }
+  }, [finalImages.length, imageIndex])
 
   useEffect(() => {
     if (!visible) return
 
-    const prevOverflow = document.body.style.overflow
+    const prevBodyOverflow = document.body.style.overflow
+    const prevHtmlOverflow = document.documentElement.style.overflow
     document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
 
     let cancelled = false
+    let progressTimer: ReturnType<typeof setInterval> | null = null
+    let imageTimer: ReturnType<typeof setInterval> | null = null
+
     const finish = () => {
       if (cancelled) return
+      setProgress(100)
       setVisible(false)
-      document.body.style.overflow = prevOverflow || ''
+      document.body.style.overflow = prevBodyOverflow || ''
+      document.documentElement.style.overflow = prevHtmlOverflow || ''
     }
 
     const run = async () => {
+      const stepMs = Math.max(14, Math.floor(MIN_MS / TOTAL_STEPS))
+      progressTimer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            if (progressTimer) clearInterval(progressTimer)
+            return 100
+          }
+          return prev + 1
+        })
+      }, stepMs)
+
+      imageTimer = setInterval(() => {
+        setImageIndex((prev) => (prev + 1) % finalImages.length)
+      }, 560)
+
       await Promise.all([
         new Promise((r) => setTimeout(r, MIN_MS)),
         document.fonts?.ready ?? Promise.resolve(),
@@ -40,9 +67,12 @@ export default function Preloader() {
     run()
     return () => {
       cancelled = true
-      document.body.style.overflow = prevOverflow || ''
+      if (progressTimer) clearInterval(progressTimer)
+      if (imageTimer) clearInterval(imageTimer)
+      document.body.style.overflow = prevBodyOverflow || ''
+      document.documentElement.style.overflow = prevHtmlOverflow || ''
     }
-  }, [visible])
+  }, [finalImages.length, visible])
 
   return (
     <AnimatePresence>
@@ -55,87 +85,54 @@ export default function Preloader() {
           aria-label="Carregando Veredas"
           initial={{ opacity: 1 }}
           exit={{
-            opacity: 0,
-            transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
+            clipPath: 'inset(100% 0 0 0)',
+            transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
           }}
         >
-          <div
-            className="pointer-events-none absolute inset-0 opacity-90"
-            style={{
-              background:
-                'radial-gradient(ellipse 80% 55% at 50% 45%, rgba(66,119,246,0.12) 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 70% 60%, rgba(255,171,219,0.1) 0%, transparent 50%)',
-            }}
-          />
+          <div className="pointer-events-none absolute inset-0 bg-black/[0.08]" />
 
-          <motion.div
-            className="pointer-events-none absolute h-[min(58vw,420px)] w-[min(58vw,420px)] rounded-full border border-neutral-200"
-            initial={{ scale: 0.88, opacity: 0 }}
-            animate={{ scale: [0.88, 1.02, 0.95], opacity: [0, 0.5, 0.22] }}
-            transition={{
-              duration: 2.2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-
-          <div className="relative flex flex-col items-center gap-14 px-6">
-            <div className="relative">
-              <motion.div
-                className="pointer-events-none absolute -inset-8 overflow-hidden rounded-lg md:-inset-12"
-                initial={false}
+          <div className="relative flex w-full max-w-[min(92vw,780px)] flex-col gap-6 px-6">
+            <div className="flex items-center justify-between">
+              <p
+                className="text-[clamp(2rem,6vw,4.4rem)] uppercase leading-[0.92] tracking-[0.02em] text-[#242424]"
+                style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
               >
-                <motion.div
-                  className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-neutral-800/20 to-transparent"
-                  style={{ skewX: '-18deg' }}
-                  animate={{ x: ['-120%', '220%'] }}
-                  transition={{
-                    duration: 2.4,
-                    repeat: Infinity,
-                    ease: 'linear',
-                    repeatDelay: 0.35,
-                  }}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.82, filter: 'blur(8px)' }}
-                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                transition={{
-                  duration: 0.85,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+                VEREDAS
+              </p>
+              <p
+                className="text-[clamp(1.3rem,4vw,2.6rem)] uppercase text-[#242424]"
+                style={{ fontFamily: 'var(--font-bebas)', letterSpacing: '0.03em' }}
               >
-                <LogoVeredas
-                  className="relative z-[1] h-16 w-auto text-[#242424] drop-shadow-[0_0_32px_rgba(0,0,0,0.08)] sm:h-20 md:h-28"
-                  aria-hidden
-                />
-              </motion.div>
+                {progress}
+              </p>
             </div>
 
-            <div className="flex h-2 w-[min(300px,72vw)] gap-1.5 overflow-hidden rounded-full bg-neutral-200/80 p-px sm:h-2.5">
-              {BRAND_BARS.map((color, i) => (
+            <div className="relative">
+              <div className="relative mx-auto flex h-[min(72vh,760px)] w-[min(72vw,420px)] items-center justify-center overflow-hidden">
+                <AnimatePresence initial={false}>
+                  <motion.img
+                    key={`${finalImages[imageIndex]}-${imageIndex}`}
+                    src={finalImages[imageIndex]}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-contain"
+                    initial={{ opacity: 0, scale: 1.02 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.99 }}
+                    transition={{ duration: 0.24, ease: 'easeOut' }}
+                    draggable={false}
+                  />
+                </AnimatePresence>
+              </div>
+
+              <div className="mx-auto mt-3 h-[3px] w-[min(72vw,420px)] bg-black/20">
                 <motion.div
-                  key={color}
-                  className="h-full flex-1 origin-left rounded-full"
-                  style={{ backgroundColor: color }}
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{
-                    duration: 0.55,
-                    delay: 0.35 + i * 0.14,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+                  className="h-full origin-left bg-[var(--brand-blue)]"
+                  animate={{ scaleX: Math.max(0.02, progress / 100) }}
+                  transition={{ duration: 0.08, ease: 'linear' }}
                 />
-              ))}
+              </div>
             </div>
           </div>
-
-          <motion.div
-            className="pointer-events-none absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-neutral-200/50 to-transparent"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-          />
         </motion.div>
       )}
     </AnimatePresence>

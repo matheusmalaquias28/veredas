@@ -7,8 +7,11 @@ type FounderKey = 'natalia' | 'laila' | 'shay'
 
 const FOUNDERS_ORDER: FounderKey[] = ['natalia', 'laila', 'shay']
 
-/** Quando existirem em `public/sobre/`, preencha os caminhos (ex: '/sobre/natalia.jpg'). */
-const FOUNDER_IMAGES: Partial<Record<FounderKey, string>> = {}
+const FOUNDER_IMAGES: Record<FounderKey, string> = {
+  natalia: '/sobre/natalia.png',
+  laila: '/sobre/laila.png',
+  shay: '/sobre/shay.png',
+}
 
 export default function SobreContent() {
   const { translations: t } = useLang()

@@ -8,14 +8,16 @@ import Preloader from '@/components/Preloader'
 export default function SiteChrome({
   children,
   instagramUrl,
+  preloaderImages,
 }: {
   children: React.ReactNode
   instagramUrl?: string | null
+  preloaderImages?: string[]
 }) {
   return (
     <>
       <LenisSmoothScroll />
-      <Preloader />
+      <Preloader images={preloaderImages} />
       <Navbar />
       <main>{children}</main>
       <Footer instagramUrl={instagramUrl} />

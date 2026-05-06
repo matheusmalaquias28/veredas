@@ -19,6 +19,8 @@ interface HorizontalCarouselProps {
   titleBoxTextColor?: string
   /** Classes Tailwind da linha do título (substitui o `pt-12 pb-6` predefinido). */
   headerRowClassName?: string
+  /** Classes extra no `<section>` (ex.: `-mt-8` para aproximar do carrossel anterior). */
+  sectionClassName?: string
   children: ReactNode
 }
 
@@ -33,6 +35,7 @@ export default function HorizontalCarousel({
   titleBoxColor = '#4277F6',
   titleBoxTextColor = '#ffffff',
   headerRowClassName,
+  sectionClassName,
 }: HorizontalCarouselProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -159,7 +162,7 @@ export default function HorizontalCarousel({
     <section
       ref={sectionRef}
       id={id}
-      className="relative min-h-[100svh] bg-background"
+      className={`relative min-h-[100svh] bg-background ${sectionClassName ?? ''}`}
     >
       <div className="sticky top-0 flex min-h-[100svh] flex-col overflow-hidden">
         {/* Section header */}
@@ -228,7 +231,7 @@ export default function HorizontalCarousel({
 
         {/* Bottom rule */}
         <div
-          className="mx-6 md:mx-10 mb-8 flex-shrink-0"
+          className="mx-6 md:mx-10 mb-4 flex-shrink-0"
           style={{ height: '1px', background: 'rgba(0,0,0,0.08)' }}
         />
       </div>

@@ -82,6 +82,8 @@ export default async function HomePage({
           visibleCountDesktop={3}
           visibleCountMobile={1.2}
           titleBlueBox
+          sectionClassName="-mt-10 md:-mt-14"
+          headerRowClassName="pt-6 pb-5 md:pt-8 md:pb-6"
         >
           {atoresFiltrados.map((a) => (
             <ActorCard key={a._id} ator={a} />

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Bebas_Neue, Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import { LanguageProvider } from '@/contexts/LanguageContext'
+import { getSiteUrl } from '@/lib/siteUrl'
 import './globals.css'
 
 const poppins = Poppins({
@@ -28,8 +29,14 @@ const druk = localFont({
 })
 
 export const metadata: Metadata = {
+  metadataBase: getSiteUrl(),
   title: 'Veredas Casting',
   description: 'Agência de casting para cinema, televisão e publicidade.',
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    siteName: 'Veredas',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

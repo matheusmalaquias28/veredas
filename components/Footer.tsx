@@ -29,7 +29,7 @@ export default function Footer({ instagramUrl }: { instagramUrl?: string | null 
     { href: '/#elenco', label: t.nav.casting },
     { href: '/criativos', label: t.nav.criativos },
     { href: '/sobre', label: t.nav.sobre },
-    { href: '/#contato', label: t.nav.contato },
+    { href: '/contato', label: t.nav.contato },
   ] as const
 
   return (

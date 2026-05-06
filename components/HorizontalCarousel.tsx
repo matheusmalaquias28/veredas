@@ -52,6 +52,11 @@ export default function HorizontalCarousel({
     dragOffset: 0,
     maxTranslate: 0,
     isHorizontalDrag: false,
+    isHovered: false,
+    scrollLocked: false,
+    previousBodyOverflowY: '',
+    previousHtmlOverflowY: '',
+    suppressClick: false,
   })
 
   useEffect(() => {
@@ -84,6 +89,7 @@ export default function HorizontalCarousel({
       s.isDragging = true
       s.startX = e.clientX
       s.dragOffset = 0
+      s.suppressClick = false
       track.style.cursor = 'grabbing'
       track.style.transition = 'none'
     }
@@ -96,10 +102,52 @@ export default function HorizontalCarousel({
 
     const handleMouseUp = () => {
       if (!s.isDragging) return
+      const draggedEnoughToCancelClick = Math.abs(s.dragOffset) > 6
       s.isDragging = false
       s.currentTranslate = Math.max(-s.maxTranslate, Math.min(0, s.currentTranslate + s.dragOffset))
       s.dragOffset = 0
+      s.suppressClick = draggedEnoughToCancelClick
       track.style.cursor = 'grab'
+    }
+
+    const handleMouseEnter = () => {
+      s.isHovered = true
+      if (!s.scrollLocked) {
+        s.previousBodyOverflowY = document.body.style.overflowY
+        s.previousHtmlOverflowY = document.documentElement.style.overflowY
+        document.body.style.overflowY = 'hidden'
+        document.documentElement.style.overflowY = 'hidden'
+        s.scrollLocked = true
+      }
+    }
+
+    const handleMouseLeave = () => {
+      s.isHovered = false
+      if (s.scrollLocked) {
+        document.body.style.overflowY = s.previousBodyOverflowY
+        document.documentElement.style.overflowY = s.previousHtmlOverflowY
+        s.scrollLocked = false
+      }
+    }
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!s.isHovered) return
+
+      const movement = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX
+      if (movement === 0) return
+
+      e.preventDefault()
+      e.stopPropagation()
+      s.currentTranslate = Math.max(-s.maxTranslate, Math.min(0, s.currentTranslate - movement))
+      s.dragOffset = 0
+      applyTransform()
+    }
+
+    const handleTrackClickCapture = (e: MouseEvent) => {
+      if (!s.suppressClick) return
+      e.preventDefault()
+      e.stopPropagation()
+      s.suppressClick = false
     }
 
     // Touch drag
@@ -146,15 +194,28 @@ export default function HorizontalCarousel({
     track.addEventListener('mousedown', handleMouseDown)
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
+    track.addEventListener('mouseenter', handleMouseEnter)
+    track.addEventListener('mouseleave', handleMouseLeave)
+    window.addEventListener('wheel', handleWheel, { passive: false, capture: true })
+    track.addEventListener('click', handleTrackClickCapture, true)
     track.addEventListener('touchstart', handleTouchStart, { passive: true })
     track.addEventListener('touchmove', handleTouchMove, { passive: false })
     track.addEventListener('touchend', handleTouchEnd)
 
     return () => {
+      if (s.scrollLocked) {
+        document.body.style.overflowY = s.previousBodyOverflowY
+        document.documentElement.style.overflowY = s.previousHtmlOverflowY
+        s.scrollLocked = false
+      }
       window.removeEventListener('resize', recalculate)
       track.removeEventListener('mousedown', handleMouseDown)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
+      track.removeEventListener('mouseenter', handleMouseEnter)
+      track.removeEventListener('mouseleave', handleMouseLeave)
+      window.removeEventListener('wheel', handleWheel, true)
+      track.removeEventListener('click', handleTrackClickCapture, true)
       track.removeEventListener('touchstart', handleTouchStart)
       track.removeEventListener('touchmove', handleTouchMove)
       track.removeEventListener('touchend', handleTouchEnd)
@@ -216,7 +277,7 @@ export default function HorizontalCarousel({
         </div>
 
         {/* Track */}
-        <div className="flex-1 flex items-stretch overflow-hidden">
+        <div className="flex-1 flex items-start overflow-hidden">
           <div
             ref={trackRef}
             className="flex items-stretch will-change-transform"

@@ -104,7 +104,7 @@ export default function HomeAgenciaSection({ imageUrl }: { imageUrl: string | nu
 
       {/* Selo — metade para fora à direita, roda com o scroll */}
       <div
-        className="pointer-events-none absolute top-1/2 right-0 z-[3] h-[min(82vw,580px)] w-[min(82vw,580px)] -translate-y-1/2 translate-x-1/2 md:h-[min(52vw,580px)] md:w-[min(52vw,580px)]"
+        className="pointer-events-none absolute top-1/2 right-0 z-[3] h-[min(48vw,580px)] w-[min(48vw,580px)] -translate-y-1/2 translate-x-1/2 md:h-[min(52vw,580px)] md:w-[min(52vw,580px)]"
         aria-hidden
       >
         <motion.div

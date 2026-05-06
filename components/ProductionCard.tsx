@@ -9,7 +9,7 @@ interface Producao {
 
 export default function ProductionCard({ producao }: { producao: Producao }) {
   const imageUrl = producao.imagem?.asset
-    ? urlFor(producao.imagem).width(600).fit('max').url()
+    ? urlFor(producao.imagem).width(900).fit('max').url()
     : null
 
   return (

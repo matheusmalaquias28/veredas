@@ -7,6 +7,7 @@ type Lang = 'pt' | 'en'
 const t = {
   pt: {
     nav: {
+      home: 'Home',
       elenco: 'Elenco',
       producoes: 'Produções',
       contato: 'Contato',
@@ -55,6 +56,22 @@ const t = {
         'A Veredas atua entre o talento e a obra, entre o posicionamento e a oportunidade. Com uma curadoria rigorosa, garantimos a construção de caminhos consistentes para artistas de alto nível no audiovisual e em projetos com marcas.',
       quote: 'Gente que toca antes de encostar.',
       cta: 'Conheça a Veredas',
+    },
+    contatoPage: {
+      eyebrow: 'Contato',
+      title: 'Vamos conversar',
+      description:
+        'Entre em contato com a equipe Veredas para parcerias, elenco, criativos e projetos audiovisuais.',
+      formTitle: 'Envie sua mensagem',
+      name: 'Nome',
+      email: 'E-mail',
+      subject: 'Assunto',
+      message: 'Mensagem',
+      submit: 'Enviar',
+      submitting: 'Enviando...',
+      success: 'Mensagem preparada. Abra seu e-mail para concluir o envio.',
+      fallback:
+        'Não foi possível abrir o app de e-mail. Envie para contato@veredas.art com sua mensagem.',
     },
     sobre: {
       p1: 'A Veredas é uma agência de gestão de carreira e empresariamento artístico, dedicada à construção de caminhos consistentes para artistas de alto nível de atuação, com foco no audiovisual e em projetos com marcas.',
@@ -124,6 +141,7 @@ const t = {
   },
   en: {
     nav: {
+      home: 'Home',
       elenco: 'Cast',
       producoes: 'Productions',
       contato: 'Contact',
@@ -172,6 +190,22 @@ const t = {
         'Veredas operates between talent and work, between positioning and opportunity. With rigorous curation, we build consistent paths for high-level artists in audiovisual and brand-led projects.',
       quote: 'People who touch before they land.',
       cta: 'Discover Veredas',
+    },
+    contatoPage: {
+      eyebrow: 'Contact',
+      title: "Let's talk",
+      description:
+        'Get in touch with the Veredas team for partnerships, casting, creatives and audiovisual projects.',
+      formTitle: 'Send your message',
+      name: 'Name',
+      email: 'E-mail',
+      subject: 'Subject',
+      message: 'Message',
+      submit: 'Send',
+      submitting: 'Sending...',
+      success: 'Message prepared. Open your e-mail app to finish sending.',
+      fallback:
+        'We could not open your e-mail app. Please send your message to contato@veredas.art.',
     },
     sobre: {
       p1: 'Veredas is a career management and artistic entrepreneurship agency, committed to building consistent paths for highly accomplished artists, with a focus on audiovisual work and brand-led projects.',

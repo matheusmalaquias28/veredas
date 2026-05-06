@@ -20,7 +20,7 @@ interface Ator {
 
 export default function ActorCard({ ator }: { ator: Ator }) {
   const imageUrl = ator.fotoPrincipal?.asset
-    ? urlFor(ator.fotoPrincipal).width(400).fit('max').url()
+    ? urlFor(ator.fotoPrincipal).width(900).fit('max').url()
     : null
 
   return (

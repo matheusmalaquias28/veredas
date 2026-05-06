@@ -322,6 +322,17 @@ export default function Navbar() {
                   animate="show"
                 >
                   <motion.div className="w-full max-w-full" variants={navItemVariants}>
+                    <Link
+                      href="/"
+                      className={linkClass}
+                      style={{ ...menuTitleFont, fontSize: '20em' }}
+                      onClick={closeMenu}
+                    >
+                      {t.nav.home}
+                    </Link>
+                  </motion.div>
+
+                  <motion.div className="w-full max-w-full" variants={navItemVariants}>
                     <button
                       type="button"
                       className={`${linkClass} flex w-full items-center justify-center gap-3`}
@@ -400,7 +411,7 @@ export default function Navbar() {
 
                   <motion.div className="w-full max-w-full" variants={navItemVariants}>
                     <Link
-                      href="/#contato"
+                      href="/contato"
                       className={linkClass}
                       style={{ ...menuTitleFont, fontSize: '20em' }}
                       onClick={closeMenu}

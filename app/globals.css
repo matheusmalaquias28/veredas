@@ -1,26 +1,173 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #eadfd5;
+  --foreground: #242424;
+
+  /* Identidade visual — faixas do menu e acentos */
+  --brand-flame: #db260e;
+  --brand-blue: #4277f6;
+  --brand-pink: #ffabdb;
+  --brand-sun: #ffc801;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: #f5ede5;
+  --color-brand-flame: var(--brand-flame);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-sun: var(--brand-sun);
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+  --font-display: var(--font-poppins), system-ui, sans-serif;
+  --font-condensed: var(--font-condensed-raw), 'Arial Narrow', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+  color: var(--foreground);
+  scroll-behavior: smooth;
+  /* Alinha âncoras (#) abaixo do header fixo (~72px) */
+  scroll-padding-top: 72px;
+}
+
+/* Lenis controla o easing; evita “dupla suavização” com scroll-behavior */
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
+  font-family: var(--font-sans);
+  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-up {
+  animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1.2s ease both;
+}
+
+.delay-200 { animation-delay: 200ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* Carousel card widths — produções (grade fixa) */
+.production-card {
+  width: calc((100vw - 5 * 16px - 2 * 2.5rem) / 6 * 0.8);
+}
+
+@media (max-width: 767px) {
+  .production-card {
+    width: calc((100vw - 12px - 2 * 1.5rem) / 1.5 * 0.8);
+  }
+}
+
+/* Elenco: largura alinhada ao HorizontalCarousel (--cc-vis / --cc-gap definidos no track) */
+.actor-card {
+  width: calc(
+    (100vw - (var(--cc-vis, 6) - 1) * var(--cc-gap, 16px) - 2 * 2.5rem) / var(--cc-vis, 6) * 0.85
+  );
+}
+
+@media (max-width: 767px) {
+  .actor-card {
+    width: calc(
+      (100vw - (var(--cc-vis, 1.5) - 1) * var(--cc-gap, 12px) - 2 * 1.5rem) / var(--cc-vis, 1.5) * 0.85
+    );
+  }
+}
+
+/* Rodapé — faixa “VEREDAS AGENCIAMENTO” em loop */
+@keyframes footer-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.footer-marquee {
+  overflow: hidden;
+}
+
+.footer-marquee__track {
+  animation: footer-marquee-scroll 55s linear infinite;
+  will-change: transform;
+}
+
+.footer-marquee__segment {
+  font-family: var(--font-condensed);
+  font-weight: 900;
+  font-size: clamp(6rem, 14vw, 10rem);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  color: var(--background);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-marquee .footer-marquee__track {
+    animation: none;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-inline: auto;
+    width: 100% !important;
+    max-width: 100%;
+    transform: none;
+    will-change: auto;
+  }
+
+  .footer-marquee .footer-marquee__track > div:last-child {
+    display: none;
+  }
+
+  .footer-marquee .footer-marquee__track > div:first-child {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .footer-marquee .footer-marquee__track > div:first-child .footer-marquee__segment:not(:first-child) {
+    display: none;
+  }
 }

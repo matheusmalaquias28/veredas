@@ -79,7 +79,7 @@ export default function Preloader({ images = [] }: { images?: string[] }) {
       {visible && (
         <motion.div
           key="preloader"
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-background"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-black"
           role="status"
           aria-live="polite"
           aria-label="Carregando Veredas"
@@ -90,47 +90,62 @@ export default function Preloader({ images = [] }: { images?: string[] }) {
           }}
         >
           <div className="pointer-events-none absolute inset-0 bg-black/[0.08]" />
+          <div className="relative z-10 flex w-full items-center justify-center px-6 md:px-10">
+            <div className="flex w-full max-w-[1200px] flex-col items-center gap-2 md:grid md:grid-cols-[1fr_min(72vw,420px)_1fr] md:items-center md:gap-4">
+              <div className="flex w-[min(72vw,420px)] items-center justify-between md:hidden">
+                <p
+                  className="text-[clamp(2.3rem,10vw,4rem)] uppercase leading-[0.92] tracking-[0.02em] text-white"
+                  style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
+                >
+                  VEREDAS
+                </p>
+                <p
+                  className="text-[clamp(1.6rem,7vw,3rem)] uppercase text-white"
+                  style={{ fontFamily: 'var(--font-bebas)', letterSpacing: '0.03em' }}
+                >
+                  {progress}%
+                </p>
+              </div>
 
-          <div className="relative flex w-full max-w-[min(92vw,780px)] flex-col gap-6 px-6">
-            <div className="flex items-center justify-between">
               <p
-                className="text-[clamp(2rem,6vw,4.4rem)] uppercase leading-[0.92] tracking-[0.02em] text-[#242424]"
+                className="hidden justify-self-end text-[clamp(4rem,12vw,8.8rem)] uppercase leading-[0.92] tracking-[0.02em] text-white md:block"
                 style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
               >
                 VEREDAS
               </p>
+
+              <div className="relative">
+                <div className="relative mx-auto flex h-[min(72vh,760px)] w-[min(72vw,420px)] items-center justify-center overflow-hidden">
+                  <AnimatePresence initial={false}>
+                    <motion.img
+                      key={`${finalImages[imageIndex]}-${imageIndex}`}
+                      src={finalImages[imageIndex]}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-contain"
+                      initial={{ opacity: 0, scale: 1.02 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.99 }}
+                      transition={{ duration: 0.24, ease: 'easeOut' }}
+                      draggable={false}
+                    />
+                  </AnimatePresence>
+                </div>
+
+                <div className="mx-auto mt-3 h-[3px] w-[min(72vw,420px)] bg-black/20">
+                  <motion.div
+                    className="h-full origin-left bg-[var(--brand-blue)]"
+                    animate={{ scaleX: Math.max(0.02, progress / 100) }}
+                    transition={{ duration: 0.08, ease: 'linear' }}
+                  />
+                </div>
+              </div>
+
               <p
-                className="text-[clamp(1.3rem,4vw,2.6rem)] uppercase text-[#242424]"
+                className="hidden justify-self-start text-[clamp(2.6rem,8vw,5.2rem)] uppercase text-white md:block"
                 style={{ fontFamily: 'var(--font-bebas)', letterSpacing: '0.03em' }}
               >
-                {progress}
+                {progress}%
               </p>
-            </div>
-
-            <div className="relative">
-              <div className="relative mx-auto flex h-[min(72vh,760px)] w-[min(72vw,420px)] items-center justify-center overflow-hidden">
-                <AnimatePresence initial={false}>
-                  <motion.img
-                    key={`${finalImages[imageIndex]}-${imageIndex}`}
-                    src={finalImages[imageIndex]}
-                    alt=""
-                    className="absolute inset-0 h-full w-full object-contain"
-                    initial={{ opacity: 0, scale: 1.02 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.99 }}
-                    transition={{ duration: 0.24, ease: 'easeOut' }}
-                    draggable={false}
-                  />
-                </AnimatePresence>
-              </div>
-
-              <div className="mx-auto mt-3 h-[3px] w-[min(72vw,420px)] bg-black/20">
-                <motion.div
-                  className="h-full origin-left bg-[var(--brand-blue)]"
-                  animate={{ scaleX: Math.max(0.02, progress / 100) }}
-                  transition={{ duration: 0.08, ease: 'linear' }}
-                />
-              </div>
             </div>
           </div>
         </motion.div>

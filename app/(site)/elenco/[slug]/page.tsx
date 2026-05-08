@@ -11,6 +11,7 @@ import { urlFor } from '@/sanity/lib/image'
 import type { ElencoListItem, ElencoProfile, ElencoTipo } from '@/types/elenco'
 import ElencoDownloadButton from '@/components/ElencoDownloadButton'
 import ElencoProfileInfo from '@/components/ElencoProfileInfo'
+import HireForm from '@/components/HireForm'
 import { portableTextToPlain } from '@/lib/portableTextToPlain'
 
 export const revalidate = 60
@@ -67,7 +68,7 @@ export default async function ElencoProfilePage({ params }: { params: Promise<{ 
     : null
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-black text-neutral-200">
       <div className="flex flex-col md:flex-row">
         <div className="relative w-full shrink-0 md:w-[45%] md:sticky md:top-0 md:h-screen">
           {heroUrl ? (
@@ -80,7 +81,7 @@ export default async function ElencoProfilePage({ params }: { params: Promise<{ 
               className="object-cover"
             />
           ) : (
-            <div className="h-full w-full min-h-[60vw] bg-neutral-100 md:min-h-0" />
+            <div className="h-full w-full min-h-[60vw] bg-neutral-900 md:min-h-0" />
           )}
           <div className="aspect-[3/4] w-full md:hidden" aria-hidden />
         </div>
@@ -90,10 +91,12 @@ export default async function ElencoProfilePage({ params }: { params: Promise<{ 
 
       {artist.fotosExtras && artist.fotosExtras.length > 0 && (
         <div className="mx-auto max-w-5xl px-6 pb-20 md:px-10">
-          <div className="mb-8 h-px bg-neutral-100" />
+          <div className="mb-8 h-px bg-white/10" />
           <Gallery images={artist.fotosExtras} />
         </div>
       )}
+
+      <HireForm artistName={artist.nome} />
 
       <ElencoDownloadButton artist={artist} />
     </main>

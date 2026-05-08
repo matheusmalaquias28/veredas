@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
 
 type FounderKey = 'natalia' | 'laila' | 'shay'
@@ -13,66 +14,267 @@ const FOUNDER_IMAGES: Record<FounderKey, string> = {
   shay: '/sobre/shay.png',
 }
 
+const PROCESS_IMAGES = [
+  '/sobre/curadoria.png',
+  '/sobre/estrategia.png',
+  '/sobre/oportunidades.png',
+  '/sobre/relacoes.png',
+  '/sobre/acompanhamento.png',
+]
+
+const FOUNDER_EMAILS: Record<FounderKey, string> = {
+  natalia: 'natalia@veredas.art',
+  laila: 'contato@veredas.art',
+  shay: 'media@veredas.art',
+}
+
 export default function SobreContent() {
-  const { translations: t } = useLang()
+  const { lang, translations: t } = useLang()
+  const [activeFounder, setActiveFounder] = useState<FounderKey | null>(null)
+  const [activeMedia, setActiveMedia] = useState<string | null>(null)
+  const labels =
+    lang === 'pt'
+      ? {
+          essence: 'NOSSA ESSÊNCIA',
+          direction: 'DIREÇÃO E TRAVESSIA',
+          process: 'COMO TRABALHAMOS',
+          commitment: 'NOSSO COMPROMISSO',
+          signature: 'NOSSA ASSINATURA',
+          team: 'NOSSO TIME',
+          heading: 'CONHEÇA QUEM CONDUZ',
+          steps: [
+            {
+              title: 'CURADORIA',
+              body: 'Seleção rigorosa de talentos com potencial artístico, profissional e de mercado.',
+            },
+            {
+              title: 'ESTRATÉGIA',
+              body: 'Construção de posicionamento, repertório e narrativa de carreira sólida e autêntica.',
+            },
+            {
+              title: 'OPORTUNIDADES',
+              body: 'Conexão com projetos no audiovisual e com marcas alinhadas ao perfil de cada artista.',
+            },
+            {
+              title: 'RELAÇÕES',
+              body: 'Relacionamento ativo com produtoras, plataformas e parceiros estratégicos.',
+            },
+            {
+              title: 'ACOMPANHAMENTO',
+              body: 'Condução sensível e próxima em cada etapa da carreira, das escolhas ao mercado.',
+            },
+          ],
+        }
+      : {
+          essence: 'OUR ESSENCE',
+          direction: 'DIRECTION & CROSSING',
+          process: 'HOW WE WORK',
+          commitment: 'OUR COMMITMENT',
+          signature: 'OUR SIGNATURE',
+          team: 'OUR TEAM',
+          heading: 'MEET WHO LEADS',
+          steps: [
+            {
+              title: 'CURATION',
+              body: 'Rigorous talent selection with artistic, professional and market potential.',
+            },
+            {
+              title: 'STRATEGY',
+              body: 'Positioning, repertoire and career storytelling with long-term consistency.',
+            },
+            {
+              title: 'OPPORTUNITIES',
+              body: 'Connection with audiovisual projects and brands aligned to each profile.',
+            },
+            {
+              title: 'RELATIONSHIPS',
+              body: 'Active relationships with production companies, platforms and strategic partners.',
+            },
+            {
+              title: 'FOLLOW-UP',
+              body: 'Close and thoughtful guidance through every career decision and opportunity.',
+            },
+          ],
+        }
 
   return (
-    <>
-      <article
-        className="mx-auto max-w-3xl space-y-6 text-neutral-700"
-        style={{ fontSize: '1.02rem', lineHeight: 1.68 }}
-      >
-        <p>{t.sobre.p1}</p>
-        <p>{t.sobre.p2}</p>
-        <p>{t.sobre.p3}</p>
+    <section className="mx-auto max-w-[1200px] border-t border-black/20 pb-16 md:pb-24">
+      <div className="grid border-b border-black/20 py-6 md:grid-cols-2 md:items-center md:gap-8">
         <p
-          className="border-l-2 border-[var(--brand-blue)] pl-5 text-[#242424]"
-          style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', lineHeight: 1.45 }}
+          className="max-w-xl text-[28px] leading-[42px] tracking-[-0.015em] text-[#242424]"
+          style={{ fontFamily: '"Times New Roman", serif' }}
+        >
+          {t.sobre.p1}
+        </p>
+        <div
+          className="group relative mt-5 aspect-[16/9] cursor-pointer overflow-hidden md:mt-0"
+          onClick={() => setActiveMedia((prev) => (prev === 'intro' ? null : 'intro'))}
+        >
+          <video
+            src="/sobre/sobre-intro.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`h-full w-full object-cover transition-[filter,transform] duration-500 ease-out md:group-hover:scale-[1.02] md:group-hover:grayscale-0 ${
+              activeMedia === 'intro' ? 'scale-[1.02] grayscale-0' : 'grayscale'
+            }`}
+            aria-label={lang === 'pt' ? 'Bastidores da agencia' : 'Agency backstage'}
+          />
+        </div>
+      </div>
+
+      <div className="border-b border-black/20 py-7">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+          <p>{labels.essence}</p>
+          <p className="mt-3">{labels.direction}</p>
+        </div>
+        <p
+          className="max-w-4xl text-[30px] italic leading-[39px] tracking-[-0.008em] text-[#1f1f1f]"
+          style={{ fontFamily: '"Times New Roman", serif' }}
+        >
+          {t.sobre.p2}
+        </p>
+      </div>
+
+      <div className="border-b border-black/20 py-7">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+          {labels.process}
+        </div>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+          {labels.steps.map((step, index) => (
+            <article
+              key={step.title}
+              className="group border-l border-black/20 pl-3 md:pl-4"
+              onClick={() => setActiveMedia((prev) => (prev === `process-${index}` ? null : `process-${index}`))}
+            >
+              <p className="text-[0.48rem] font-semibold uppercase tracking-[0.09em] text-[#242424]/65">
+                {String(index + 1).padStart(2, '0')}.
+              </p>
+              <h3
+                className="mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.11em] text-[#111]"
+                style={{ fontFamily: 'var(--font-sans)' }}
+              >
+                {step.title}
+              </h3>
+              <div className="relative mt-3 aspect-[6/5] cursor-pointer overflow-hidden bg-black/10">
+                <Image
+                  src={PROCESS_IMAGES[index] ?? `/sobre/${FOUNDERS_ORDER[index % FOUNDERS_ORDER.length]}.png`}
+                  alt={step.title}
+                  fill
+                  className={`object-cover transition-[filter,transform] duration-500 ease-out md:group-hover:scale-[1.02] md:group-hover:grayscale-0 ${
+                    activeMedia === `process-${index}` ? 'scale-[1.02] grayscale-0' : 'grayscale'
+                  }`}
+                  sizes="(max-width: 767px) 100vw, 16vw"
+                />
+              </div>
+              <p
+                className="mt-3 text-[12px] leading-[1.35] text-[#242424]/80"
+                style={{ fontFamily: 'var(--font-sans)' }}
+              >
+                {step.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="border-b border-black/20 py-7">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+          {labels.commitment}
+        </div>
+        <div className="grid gap-5 md:grid-cols-[1fr_420px] md:items-center md:gap-8">
+          <p
+            className="max-w-2xl text-[clamp(1.45rem,2.9vw,2.3rem)] leading-[1.06] tracking-[-0.015em] text-[#232323]"
+            style={{ fontFamily: '"Times New Roman", serif' }}
+          >
+            {t.sobre.p3}
+          </p>
+          <div
+            className="group relative mt-1 aspect-[16/8] cursor-pointer overflow-hidden md:mt-0"
+            onClick={() => setActiveMedia((prev) => (prev === 'commitment' ? null : 'commitment'))}
+          >
+            <Image
+              src="/sobre/compromisso.png"
+              alt={lang === 'pt' ? 'Cena em preto e branco' : 'Black and white scene'}
+              fill
+              className={`object-cover transition-[filter,transform] duration-500 ease-out md:group-hover:scale-[1.02] md:group-hover:grayscale-0 ${
+                activeMedia === 'commitment' ? 'scale-[1.02] grayscale-0' : 'grayscale'
+              }`}
+              sizes="(max-width: 767px) 100vw, 24vw"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="border-b border-black/20 py-6">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+          {labels.signature}
+        </div>
+        <p
+          className="text-[clamp(1.65rem,3.5vw,2.6rem)] italic leading-[1.02] tracking-[-0.01em] text-[#1c1c1c]"
+          style={{ fontFamily: 'var(--font-display)' }}
         >
           {t.sobre.tagline}
         </p>
-      </article>
+      </div>
 
-      <section className="mx-auto mt-16 max-w-6xl md:mt-20" aria-labelledby="fundadoras-heading">
-        <h2
-          id="fundadoras-heading"
-          className="mb-10 text-center font-[family-name:var(--font-bebas)] text-3xl tracking-[-0.025em] text-[#242424] md:text-4xl"
-        >
-          {t.sobre.teamHeading}
-        </h2>
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+      <div className="pt-7">
+        <div className="mb-5 border-b border-black/20 pb-3">
+          <p className="text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+            {labels.team}
+          </p>
+          <p className="mt-2 text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+            {labels.heading}
+          </p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-3">
           {FOUNDERS_ORDER.map((key) => {
             const founder = t.sobre.founders[key]
-            const src = FOUNDER_IMAGES[key]
             return (
-              <div key={key} className="flex flex-col items-center text-center md:items-stretch md:text-left">
-                <div className="relative aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl bg-neutral-300/40 md:max-w-none">
-                  {src ? (
-                    <Image
-                      src={src}
-                      alt={founder.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 767px) 90vw, 28vw"
-                    />
-                  ) : null}
+              <article
+                key={key}
+                className="group border-b border-black/20 pb-3"
+                onClick={() => setActiveFounder((prev) => (prev === key ? null : key))}
+              >
+                <div
+                  className={`relative overflow-hidden bg-black/10 transition-[height] duration-500 ease-out ${
+                    activeFounder === key ? 'h-[672px]' : 'h-[504px]'
+                  } md:h-[564px] md:group-hover:h-[672px]`}
+                >
+                  <Image
+                    src={FOUNDER_IMAGES[key]}
+                    alt={founder.name}
+                    fill
+                    className={`object-cover transition-[filter,transform] duration-500 ease-out md:group-hover:scale-[1.02] md:group-hover:grayscale-0 ${
+                      activeFounder === key ? 'scale-[1.02] grayscale-0' : 'grayscale'
+                    }`}
+                    sizes="(max-width: 767px) 100vw, 30vw"
+                  />
+                  <div
+                    className={`pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3 transition-all duration-500 ease-out md:translate-y-full md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 ${
+                      activeFounder === key ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+                    }`}
+                  >
+                    <p className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[var(--brand-pink)]">
+                      {founder.role}
+                    </p>
+                    <p className="mt-1 text-[1.33rem] uppercase leading-none tracking-[-0.008em] text-[var(--brand-sun)]">
+                      {founder.name}
+                    </p>
+                    <a
+                      href={`mailto:${FOUNDER_EMAILS[key]}`}
+                      className="pointer-events-auto mt-2 inline-block text-[0.73rem] uppercase tracking-[0.09em] text-white underline decoration-white/60 underline-offset-2 transition-colors hover:decoration-white"
+                    >
+                      {FOUNDER_EMAILS[key]}
+                    </a>
+                  </div>
                 </div>
-                <p
-                  className="mt-4 text-[0.62rem] font-semibold uppercase leading-snug tracking-[0.14em] text-[#4277f6]"
-                  style={{ fontFamily: 'var(--font-sans)' }}
-                >
-                  {founder.role}
-                </p>
-                <p
-                  className="mt-2 font-[family-name:var(--font-bebas)] text-2xl tracking-[-0.025em] text-[#242424] md:text-[1.65rem]"
-                >
-                  {founder.name}
-                </p>
-              </div>
+              </article>
             )
           })}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }

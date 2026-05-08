@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect, useId } from 'react'
+import { useState, useEffect, useId, useMemo } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLang } from '@/contexts/LanguageContext'
-import LogoVeredas from '@/components/LogoVeredas'
 
 /** Faixas da identidade; cores em `globals.css` (--brand-*). */
 const STRIPES = [{ id: 'flame' }, { id: 'blue' }, { id: 'pink' }, { id: 'sun' }] as const
@@ -43,6 +43,21 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const { lang, translations: t, setLang } = useLang()
   const submenuId = useId()
+  const pathname = usePathname() ?? ''
+
+  /** Páginas individuais (slug) usam fundo preto — header precisa ficar claro. */
+  const isDarkPage = useMemo(() => {
+    const elencoListPaths = new Set([
+      '/elenco/atrizes',
+      '/elenco/atores',
+      '/elenco/estrangeiros',
+    ])
+    const isElencoSlug =
+      /^\/elenco\/[^/]+$/.test(pathname) && !elencoListPaths.has(pathname)
+    const isCriativoSlug =
+      /^\/criativos\/[^/]+$/.test(pathname) && pathname !== '/criativos'
+    return isElencoSlug || isCriativoSlug
+  }, [pathname])
 
   useEffect(() => {
     const update = () => {
@@ -57,8 +72,8 @@ export default function Navbar() {
     }
   }, [])
 
-  /** Controles e tipografia do header sobre fundo claro. */
-  const navForeground = 'dark' as const
+  /** Controles e tipografia do header — claro em páginas com fundo preto. */
+  const navForeground: 'dark' | 'light' = isDarkPage ? 'light' : 'dark'
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -82,17 +97,11 @@ export default function Navbar() {
     setMenuOpen(false)
   }
 
-  /** Mesma família do título da hero (`--font-condensed` / Barlow Condensed). */
-  const menuTitleFont = {
-    fontFamily: 'var(--font-condensed)',
-    fontWeight: 800,
-  } as const
-
   const linkClass =
-    'block w-full text-center uppercase leading-[0.92] tracking-[0.02em] text-[#242424] transition-colors hover:text-[var(--brand-blue)]'
+    'block w-full text-center [font-family:var(--font-montserrat)] text-[12em] font-thin uppercase leading-[0.92] tracking-[0.02em] text-[#242424] transition-colors hover:text-[var(--brand-blue)]'
 
   const subLinkClass =
-    'block py-2 text-center [font-family:var(--font-condensed)] text-[7em] font-semibold uppercase tracking-[0.12em] text-[#242424]/60 transition-colors hover:text-[var(--brand-blue)]'
+    'block py-2 text-center [font-family:var(--font-montserrat)] text-[4.2em] font-thin uppercase tracking-[0.12em] text-[#242424]/85 transition-colors hover:text-[var(--brand-blue)]'
 
   return (
     <>
@@ -102,18 +111,36 @@ export default function Navbar() {
           background: menuOpen
             ? 'transparent'
             : scrolled
-              ? 'rgba(234,223,213,0.92)'
+              ? isDarkPage
+                ? 'rgba(0,0,0,0.7)'
+                : 'rgba(234,223,213,0.92)'
               : 'transparent',
           backdropFilter: scrolled && !menuOpen ? 'blur(12px)' : 'none',
         }}
       >
-        <div className="flex h-[72px] items-center justify-between px-6 md:px-10">
+        <div className="flex h-[92px] items-center justify-between px-6 md:px-10">
           <Link
             href="/"
             onClick={closeMenu}
-            className="flex items-center text-[#0a0a0a]"
+            aria-label="Veredas"
+            className={`flex items-center ${
+              menuOpen ? 'text-[#0a0a0a]' : isDarkPage ? 'text-white' : 'text-[#0a0a0a]'
+            }`}
           >
-            <LogoVeredas className="h-9 w-auto" />
+            <svg
+              width="52"
+              height="44"
+              viewBox="0 0 52 44"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden
+              className="h-9 w-auto"
+            >
+              <path
+                d="M51.08 0C38.95 0 29.08 9.87 29.08 22V22.3H36.23C36.07 29.91 29.91 36.07 22.29 36.23C22.18 24.19 12.36 14.43 0.3 14.43H0V22.19H0.3C8.15 22.19 14.54 28.58 14.54 36.43V36.81H21.69V43.99H21.99C34.12 43.99 43.99 34.12 43.99 21.99V21.69H36.84C37 13.98 43.32 7.75 51.07 7.75H51.37V0H51.07H51.08ZM15.15 36.21C14.99 28.26 8.56 21.75 0.61 21.59V15.05C12.16 15.21 21.53 24.66 21.7 36.22H15.16L15.15 36.21ZM22.3 43.39V36.85C30.25 36.69 36.68 30.26 36.84 22.31H43.38C43.22 33.86 33.85 43.23 22.29 43.4L22.3 43.39ZM50.78 7.15C42.83 7.31 36.4 13.74 36.24 21.69H29.7C29.86 10.14 39.23 0.77 50.79 0.6V7.14L50.78 7.15Z"
+                fill="currentColor"
+              />
+            </svg>
           </Link>
 
           <div className="flex items-center gap-5">
@@ -183,9 +210,9 @@ export default function Navbar() {
                 className={`block h-[1.5px] w-full origin-center transition-all duration-300 ${
                   menuOpen
                     ? 'bg-[#0a0a0a]'
-                    : navForeground === 'dark'
-                      ? 'bg-[#0a0a0a]'
-                      : 'bg-background'
+                    : navForeground === 'light'
+                      ? 'bg-white'
+                      : 'bg-[#0a0a0a]'
                 }`}
                 style={{ transform: menuOpen ? 'translateY(6.5px) rotate(45deg)' : '' }}
               />
@@ -193,9 +220,9 @@ export default function Navbar() {
                 className={`block h-[1.5px] w-full transition-all duration-300 ${
                   menuOpen
                     ? 'bg-[#0a0a0a]'
-                    : navForeground === 'dark'
-                      ? 'bg-[#0a0a0a]'
-                      : 'bg-background'
+                    : navForeground === 'light'
+                      ? 'bg-white'
+                      : 'bg-[#0a0a0a]'
                 }`}
                 style={{ opacity: menuOpen ? 0 : 1 }}
               />
@@ -203,9 +230,9 @@ export default function Navbar() {
                 className={`block h-[1.5px] w-full origin-center transition-all duration-300 ${
                   menuOpen
                     ? 'bg-[#0a0a0a]'
-                    : navForeground === 'dark'
-                      ? 'bg-[#0a0a0a]'
-                      : 'bg-background'
+                    : navForeground === 'light'
+                      ? 'bg-white'
+                      : 'bg-[#0a0a0a]'
                 }`}
                 style={{ transform: menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : '' }}
               />
@@ -325,7 +352,6 @@ export default function Navbar() {
                     <Link
                       href="/"
                       className={linkClass}
-                      style={{ ...menuTitleFont, fontSize: '20em' }}
                       onClick={closeMenu}
                     >
                       {t.nav.home}
@@ -336,7 +362,6 @@ export default function Navbar() {
                     <button
                       type="button"
                       className={`${linkClass} flex w-full items-center justify-center gap-3`}
-                      style={{ ...menuTitleFont, fontSize: '20em' }}
                       aria-expanded={castingOpen}
                       aria-controls={submenuId}
                       onClick={() => setCastingOpen((v) => !v)}
@@ -391,7 +416,6 @@ export default function Navbar() {
                     <Link
                       href="/criativos"
                       className={linkClass}
-                      style={{ ...menuTitleFont, fontSize: '20em' }}
                       onClick={closeMenu}
                     >
                       {t.nav.criativos}
@@ -402,7 +426,6 @@ export default function Navbar() {
                     <Link
                       href="/sobre"
                       className={linkClass}
-                      style={{ ...menuTitleFont, fontSize: '20em' }}
                       onClick={closeMenu}
                     >
                       {t.nav.sobre}
@@ -413,7 +436,6 @@ export default function Navbar() {
                     <Link
                       href="/contato"
                       className={linkClass}
-                      style={{ ...menuTitleFont, fontSize: '20em' }}
                       onClick={closeMenu}
                     >
                       {t.nav.contato}

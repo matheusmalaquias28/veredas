@@ -93,13 +93,9 @@ body {
 
 /* Carousel card widths — produções (grade fixa) */
 .production-card {
-  width: calc((100vw - 5 * 16px - 2 * 2.5rem) / 6 * 0.8);
-}
-
-@media (max-width: 767px) {
-  .production-card {
-    width: calc((100vw - 12px - 2 * 1.5rem) / 1.5 * 0.8);
-  }
+  width: calc(
+    (100vw - (var(--cc-vis, 6) - 1) * var(--cc-gap, 16px) - 2 * 2.5rem) / var(--cc-vis, 6)
+  );
 }
 
 /* Elenco: largura alinhada ao HorizontalCarousel (--cc-vis / --cc-gap definidos no track) */

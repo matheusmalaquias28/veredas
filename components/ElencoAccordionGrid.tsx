@@ -137,10 +137,9 @@ function ElencoAccordionCard({
         {isExpanded && (
           <div className="absolute inset-0 flex flex-col justify-between p-4 md:p-5">
             <h2
-              className="pr-2 font-semibold uppercase leading-tight tracking-[0.06em] text-white"
+              className="pr-2 text-[24px] font-semibold uppercase leading-tight tracking-[0.06em] text-white md:text-[60px]"
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 'clamp(0.7rem, 2.5vw, 0.95rem)',
               }}
             >
               {artist.nome}
@@ -272,6 +271,7 @@ export default function ElencoAccordionGrid({ artists }: GridProps) {
         {rows.map((row, ri) => {
           const rowHasExpanded =
             expandedId !== null && row.some((a) => a._id === expandedId)
+          const missingSlots = Math.max(0, cols - row.length)
           return (
             <div key={ri} className="flex gap-2 md:gap-3">
               {row.map((artist) => (
@@ -286,6 +286,14 @@ export default function ElencoAccordionGrid({ artists }: GridProps) {
                   isSelected={selectedIds.has(artist._id)}
                   onToggleSelect={() => toggleSelect(artist)}
                   labels={labels}
+                />
+              ))}
+              {Array.from({ length: missingSlots }, (_, i) => (
+                <div
+                  key={`placeholder-${ri}-${i}`}
+                  className="min-h-0 min-w-0 basis-0"
+                  style={{ flexGrow: 1 }}
+                  aria-hidden
                 />
               ))}
             </div>

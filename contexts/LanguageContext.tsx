@@ -50,7 +50,6 @@ const t = {
     homeAgencia: {
       imageAlt: 'Veredas — ambiente da agência',
       verticalLabel: 'SOBRE A AGÊNCIA',
-      eyebrow: 'Sobre a Agência',
       title: 'Direção e Travessia',
       body:
         'A Veredas atua entre o talento e a obra, entre o posicionamento e a oportunidade. Com uma curadoria rigorosa, garantimos a construção de caminhos consistentes para artistas de alto nível no audiovisual e em projetos com marcas.',
@@ -73,9 +72,24 @@ const t = {
       fallback:
         'Não foi possível abrir o app de e-mail. Envie para contato@veredas.art com sua mensagem.',
     },
+    hireForm: {
+      title: 'Contrate nosso elenco',
+      description:
+        'Preencha o formulário abaixo e nossa equipe entrará em contato.',
+      name: 'Nome completo',
+      email: 'Melhor e-mail',
+      phone: 'Telefone',
+      message: 'Mensagem',
+      submit: 'Enviar mensagem',
+      submitting: 'Enviando...',
+      success: 'Mensagem preparada. Abra seu e-mail para concluir o envio.',
+      fallback:
+        'Não foi possível abrir o app de e-mail. Envie para contato@veredas.art com sua mensagem.',
+      subjectPrefix: 'Contratação',
+    },
     sobre: {
       p1: 'A Veredas é uma agência de gestão de carreira e empresariamento artístico, dedicada à construção de caminhos consistentes para artistas de alto nível de atuação, com foco no audiovisual e em projetos com marcas.',
-      p2: 'Atuamos como direção e travessia: entre o talento e a obra, entre o posicionamento e a oportunidade, entre a escolha e o percurso. Nosso trabalho se apoia em curadoria rigorosa, estratégia e acompanhamento próximo — da definição de repertório às decisões de mercado.',
+      p2: 'Atuamos como direção e travessia: entre o talento e a obra, entre o posicionamento e a oportunidade, entre a escolha e o percurso. Nosso trabalho se apoia em curadoria rigorosa, estratégia e acompanhamento próximo, da definição de repertório às decisões de mercado.',
       p3: 'Mantemos um casting seletivo para assegurar condução personalizada e relações sólidas com produtoras, plataformas e parceiros estratégicos.',
       tagline: 'Veredas — gente que toca antes de encostar.',
       teamHeading: 'Nosso Time',
@@ -184,7 +198,6 @@ const t = {
     homeAgencia: {
       imageAlt: 'Veredas — agency setting',
       verticalLabel: 'ABOUT THE AGENCY',
-      eyebrow: 'About the Agency',
       title: 'Direction and Crossing',
       body:
         'Veredas operates between talent and work, between positioning and opportunity. With rigorous curation, we build consistent paths for high-level artists in audiovisual and brand-led projects.',
@@ -206,6 +219,21 @@ const t = {
       success: 'Message prepared. Open your e-mail app to finish sending.',
       fallback:
         'We could not open your e-mail app. Please send your message to contato@veredas.art.',
+    },
+    hireForm: {
+      title: 'Hire our cast',
+      description:
+        'Fill out the form below and our team will get in touch.',
+      name: 'Full name',
+      email: 'Best e-mail',
+      phone: 'Phone',
+      message: 'Message',
+      submit: 'Send message',
+      submitting: 'Sending...',
+      success: 'Message prepared. Open your e-mail app to finish sending.',
+      fallback:
+        'We could not open your e-mail app. Please send your message to contato@veredas.art.',
+      subjectPrefix: 'Hiring',
     },
     sobre: {
       p1: 'Veredas is a career management and artistic entrepreneurship agency, committed to building consistent paths for highly accomplished artists, with a focus on audiovisual work and brand-led projects.',

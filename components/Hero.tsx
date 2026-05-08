@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import {
   motion,
   useScroll,
@@ -40,6 +40,7 @@ const VIDEO_INITIAL_SCALE = 0.34
 
 /** Deslocamento vertical (vh) para centralizar o vídeo pequeno no meio da tela. */
 const VIDEO_CENTER_OFFSET_VH = (0.5 - VIDEO_INITIAL_SCALE / 2) * 100
+const HERO_TITLE_VISUAL_BOOST = 1.18
 
 export default function Hero({
   videoUrl,
@@ -47,42 +48,33 @@ export default function Hero({
 }: HeroProps) {
   const { translations: t } = useLang()
   const containerRef = useRef<HTMLElement>(null)
-  const titleInnerRef = useRef<HTMLSpanElement>(null)
+  const titleContainerRef = useRef<HTMLHeadingElement>(null)
+  const titleTextRef = useRef<HTMLSpanElement>(null)
   const resolvedUrl = videoUrl ?? '/hero-background.webm'
   const word = (titulo ?? 'VEREDAS').toUpperCase()
-  const charCount = Math.max(1, word.length)
-  const letterGapPx = 2
-  const gapsTotalPx = (charCount - 1) * letterGapPx
-
   const [titleFontPx, setTitleFontPx] = useState<number | null>(null)
 
   useLayoutEffect(() => {
-    const measure = () => {
-      const vw = window.innerWidth
-      const vh = window.innerHeight
-      const widthFactor = 0.38
-      const heightDivisor = 0.58
-      const fsW = (vw - gapsTotalPx) / (charCount * widthFactor)
-      const fsH = vh / heightDivisor
-      let fs = Math.min(fsW, fsH)
+    const fitTitle = () => {
+      const container = titleContainerRef.current
+      const text = titleTextRef.current
+      if (!container || !text) return
 
-      const el = titleInnerRef.current
-      if (el) {
-        el.style.fontSize = `${fs}px`
-        const r = el.getBoundingClientRect()
-        const pad = 0.992
-        const sw = (vw * pad) / Math.max(r.width, 1)
-        const sh = (vh * pad) / Math.max(r.height, 1)
-        fs *= Math.min(sw, sh)
-      }
+      const probePx = 320
+      text.style.fontSize = `${probePx}px`
 
-      setTitleFontPx(fs)
+      const containerRect = container.getBoundingClientRect()
+      const textRect = text.getBoundingClientRect()
+
+      const fitByWidth = (containerRect.width * 0.9 * probePx) / Math.max(textRect.width, 1)
+      const fitByHeight = (containerRect.height * 0.96 * probePx) / Math.max(textRect.height, 1)
+      setTitleFontPx(Math.min(fitByWidth, fitByHeight) * HERO_TITLE_VISUAL_BOOST)
     }
 
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [word, charCount, gapsTotalPx])
+    fitTitle()
+    window.addEventListener('resize', fitTitle)
+    return () => window.removeEventListener('resize', fitTitle)
+  }, [word])
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -127,20 +119,23 @@ export default function Hero({
           style={{ clipPath: titleClipPath }}
         >
           <h1
-            className="m-0 flex max-h-[100dvh] max-w-[100vw] items-center justify-center p-0 text-center"
+            ref={titleContainerRef}
+            className="absolute inset-0 m-0 flex items-center justify-center"
             aria-label={t.hero.titulo}
           >
             <span
-              ref={titleInnerRef}
-              className="inline-block text-[#242424]"
+              ref={titleTextRef}
+              className="block text-center"
               style={{
-                visibility: titleFontPx == null ? 'hidden' : 'visible',
-                fontFamily: 'var(--font-condensed)',
-                fontWeight: 800,
-                fontSize: titleFontPx != null ? `${titleFontPx}px` : '1px',
-                lineHeight: 1,
-                letterSpacing: `${letterGapPx}px`,
+                fontFamily: 'var(--font-big-shoulders)',
+                fontWeight: 900,
+                fontSize: titleFontPx ? `${titleFontPx}px` : '1px',
+                color: '#1a1a1a',
                 textTransform: 'uppercase',
+                whiteSpace: 'nowrap',
+                lineHeight: 0.82,
+                letterSpacing: '-0.06em',
+                transform: 'scaleY(1.35)',
               }}
             >
               {word}

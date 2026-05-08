@@ -21,28 +21,13 @@ export default function ProductionCard({ producao }: { producao: Producao }) {
             alt={producao.titulo}
             fill
             sizes="(max-width: 767px) 42vw, 16vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="h-full w-full object-contain object-center"
             draggable={false}
           />
         ) : (
           <div className="absolute inset-0 bg-neutral-200" />
         )}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }}
-        />
       </div>
-      <p
-        className="mt-3 shrink-0 truncate"
-        style={{
-          fontSize: '0.65rem',
-          color: 'rgba(36,36,36,0.65)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-        }}
-      >
-        {producao.titulo}
-      </p>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { CRIATIVO_BY_SLUG_QUERY, CRIATIVOS_QUERY } from '@/sanity/lib/queries'
 import { urlFor } from '@/sanity/lib/image'
 import type { Criativo } from '@/types/criativo'
 import CriativoDownloadButton from '@/components/CriativoDownloadButton'
+import HireForm from '@/components/HireForm'
 import { portableTextToPlain } from '@/lib/portableTextToPlain'
 
 const portableComponents = {
@@ -78,12 +79,12 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
     : null
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-black text-neutral-200">
       {/* Back link */}
       <div className="fixed top-0 left-0 right-0 z-[90] flex h-[72px] items-center px-6 md:px-10">
         <Link
           href="/criativos"
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500 transition-colors hover:text-neutral-900"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400 transition-colors hover:text-white"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -106,7 +107,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
               className="object-cover"
             />
           ) : (
-            <div className="h-full w-full bg-neutral-100" style={{ minHeight: '60vw' }} />
+            <div className="h-full w-full bg-neutral-900" style={{ minHeight: '60vw' }} />
           )}
           {/* Mobile: aspect ratio placeholder */}
           <div className="aspect-[3/4] w-full md:hidden" aria-hidden />
@@ -126,10 +127,10 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
             )}
             <h1
               style={{
-                fontFamily: 'var(--font-condensed)',
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                 fontSize: 'clamp(3rem, 6vw, 5.5rem)',
-                fontWeight: 700,
-                color: '#242424',
+                fontWeight: 300,
+                color: '#ffffff',
                 lineHeight: 0.95,
                 letterSpacing: '0.01em',
               }}
@@ -138,12 +139,12 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
             </h1>
           </div>
 
-          <div className="my-8 h-px bg-neutral-100" />
+          <div className="my-8 h-px bg-white/10" />
 
           {/* Bio */}
           {criativo.biografiaCurta?.length ? (
             <div
-              className="leading-relaxed text-neutral-500"
+              className="leading-relaxed text-neutral-400"
               style={{ fontSize: '0.95rem', maxWidth: '52ch' }}
             >
               <PortableText value={criativo.biografiaCurta} components={portableComponents} />
@@ -153,8 +154,8 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           {/* Bloco 1 + Galeria 1 */}
           {criativo.bloco1?.length ? (
             <>
-              <div className="my-8 h-px bg-neutral-100" />
-              <div className="leading-relaxed text-neutral-600" style={{ fontSize: '0.95rem', maxWidth: '52ch' }}>
+              <div className="my-8 h-px bg-white/10" />
+              <div className="leading-relaxed text-neutral-300" style={{ fontSize: '0.95rem', maxWidth: '52ch' }}>
                 <PortableText value={criativo.bloco1} components={portableComponents} />
               </div>
             </>
@@ -168,8 +169,8 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           {/* Bloco 2 + Galeria 2 */}
           {criativo.bloco2?.length ? (
             <>
-              <div className="my-8 h-px bg-neutral-100" />
-              <div className="leading-relaxed text-neutral-600" style={{ fontSize: '0.95rem', maxWidth: '52ch' }}>
+              <div className="my-8 h-px bg-white/10" />
+              <div className="leading-relaxed text-neutral-300" style={{ fontSize: '0.95rem', maxWidth: '52ch' }}>
                 <PortableText value={criativo.bloco2} components={portableComponents} />
               </div>
             </>
@@ -183,8 +184,8 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           {/* Bloco 3 + Galeria 3 */}
           {criativo.bloco3?.length ? (
             <>
-              <div className="my-8 h-px bg-neutral-100" />
-              <div className="leading-relaxed text-neutral-600" style={{ fontSize: '0.95rem', maxWidth: '52ch' }}>
+              <div className="my-8 h-px bg-white/10" />
+              <div className="leading-relaxed text-neutral-300" style={{ fontSize: '0.95rem', maxWidth: '52ch' }}>
                 <PortableText value={criativo.bloco3} components={portableComponents} />
               </div>
             </>
@@ -198,14 +199,14 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           {/* Links */}
           {(criativo.site || criativo.instagram) && (
             <>
-              <div className="my-8 h-px bg-neutral-100" />
+              <div className="my-8 h-px bg-white/10" />
               <div className="flex flex-col gap-3">
                 {criativo.site && (
                   <a
                     href={criativo.site}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-neutral-900"
+                    className="flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-white"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
                       <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2" />
@@ -219,7 +220,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
                     href={`https://instagram.com/${criativo.instagram}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-neutral-900"
+                    className="flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-white"
                   >
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
                       <rect x="1" y="1" width="12" height="12" rx="3" stroke="currentColor" strokeWidth="1.2" />
@@ -237,13 +238,15 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <div className="mt-12">
             <Link
               href="/criativos"
-              className="inline-flex items-center gap-3 border border-neutral-200 px-8 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500 transition-colors hover:border-neutral-900 hover:text-neutral-900"
+              className="inline-flex items-center gap-3 border border-white/20 px-8 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400 transition-colors hover:border-white hover:text-white"
             >
               Ver todos os criativos
             </Link>
           </div>
         </div>
       </div>
+
+      <HireForm artistName={criativo.nome} />
 
       {/* Botão flutuante de download */}
       <CriativoDownloadButton criativo={criativo} />

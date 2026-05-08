@@ -2,29 +2,15 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
 
 export default function HomeAgenciaSection({ imageUrl }: { imageUrl: string | null }) {
   const resolvedSrc = imageUrl ?? '/sobre-agencia.png'
   const { translations: t } = useLang()
   const copy = t.homeAgencia
-  const sectionRef = useRef<HTMLElement>(null)
-  const reduceMotion = useReducedMotion()
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-  const sealRotate = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, reduceMotion ? 0 : 360],
-  )
 
   return (
     <section
-      ref={sectionRef}
       id="sobre-agencia"
       aria-labelledby="home-agencia-heading"
       className="relative w-full overflow-x-clip bg-background"
@@ -42,12 +28,11 @@ export default function HomeAgenciaSection({ imageUrl }: { imageUrl: string | nu
           {/* Rótulo vertical (apenas traço) — margem alinhada ao site */}
           <span
             aria-hidden
-            className="home-agencia-vertical-label pointer-events-none absolute top-1/2 left-6 z-[1] -translate-y-1/2 whitespace-nowrap select-none md:left-10"
+            className="home-agencia-vertical-label pointer-events-none absolute top-1/2 left-6 z-[1] -translate-y-1/2 whitespace-nowrap select-none text-[3rem] md:left-10 md:text-[7rem]"
             style={{
               writingMode: 'vertical-rl',
               textOrientation: 'mixed',
               fontFamily: 'var(--font-bebas)',
-              fontSize: 'clamp(1.65rem, 3.2vw, 2.35rem)',
               fontWeight: 400,
               lineHeight: 1,
               letterSpacing: '0.1em',
@@ -62,12 +47,6 @@ export default function HomeAgenciaSection({ imageUrl }: { imageUrl: string | nu
 
         {/* Texto */}
         <div className="flex flex-col justify-center px-6 py-14 md:px-10 md:py-16 lg:pl-14 lg:pr-16 xl:pl-20 xl:pr-24">
-          <p
-            className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-neutral-500"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            {copy.eyebrow}
-          </p>
           <h2
             id="home-agencia-heading"
             className="max-w-xl text-[clamp(2.25rem,4.5vw,3.75rem)] font-normal leading-[0.95] tracking-[-0.025em] text-[#242424]"
@@ -102,26 +81,6 @@ export default function HomeAgenciaSection({ imageUrl }: { imageUrl: string | nu
         </div>
       </div>
 
-      {/* Selo — metade para fora à direita, roda com o scroll */}
-      <div
-        className="pointer-events-none absolute top-1/2 right-0 z-[3] h-[min(48vw,580px)] w-[min(48vw,580px)] -translate-y-1/2 translate-x-1/2 md:h-[min(52vw,580px)] md:w-[min(52vw,580px)]"
-        aria-hidden
-      >
-        <motion.div
-          className="relative h-full w-full bg-transparent"
-          style={{ rotate: sealRotate }}
-        >
-          <Image
-            src="/Veredas_92.png"
-            alt=""
-            fill
-            unoptimized
-            className="object-contain"
-            sizes="(max-width: 767px) 82vw, 580px"
-            style={{ background: 'transparent' }}
-          />
-        </motion.div>
-      </div>
     </section>
   )
 }

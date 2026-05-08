@@ -21,6 +21,8 @@ interface HorizontalCarouselProps {
   headerRowClassName?: string
   /** Classes extra no `<section>` (ex.: `-mt-8` para aproximar do carrossel anterior). */
   sectionClassName?: string
+  /** Classes extra no wrapper sticky interno para ajustar altura/layout. */
+  stickyClassName?: string
   /** Margem inferior da régua (ex.: `mb-0` para colar no carrossel seguinte). Predefinição: `mb-4`. */
   bottomRuleMbClass?: string
   children: ReactNode
@@ -38,6 +40,7 @@ export default function HorizontalCarousel({
   titleBoxTextColor = '#ffffff',
   headerRowClassName,
   sectionClassName,
+  stickyClassName,
   bottomRuleMbClass = 'mb-4',
 }: HorizontalCarouselProps) {
   const sectionRef = useRef<HTMLElement>(null)
@@ -226,9 +229,11 @@ export default function HorizontalCarousel({
     <section
       ref={sectionRef}
       id={id}
-      className={`relative min-h-[100svh] bg-background ${sectionClassName ?? ''}`}
+      className={`relative bg-background ${sectionClassName ?? 'min-h-[100svh]'}`}
     >
-      <div className="sticky top-0 flex min-h-[100svh] flex-col overflow-hidden">
+      <div
+        className={`${stickyClassName ?? 'sticky top-0 flex min-h-[100svh] flex-col overflow-hidden'}`}
+      >
         {/* Section header */}
         <div
           className={`flex flex-shrink-0 items-end justify-between px-6 md:px-10 ${

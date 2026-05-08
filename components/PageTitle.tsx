@@ -1,24 +1,28 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useLang } from '@/contexts/LanguageContext'
 
 type PageKey = 'criativos' | 'atores' | 'atrizes' | 'estrangeiros' | 'sobre'
 
 export default function PageTitle({ pageKey }: { pageKey: PageKey }) {
-  const { translations: t } = useLang()
+  const router = useRouter()
+  const { lang, translations: t } = useLang()
   return (
     <div className="px-6 pb-10 pt-32 md:px-10 md:pt-36">
-      <p
-        className="mb-3 uppercase"
-        style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: '#4277f6' }}
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="mb-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-[#4277f6] transition-opacity hover:opacity-80"
       >
-        {t.pages.eyebrow}
-      </p>
+        <span aria-hidden>←</span>
+        <span>{lang === 'pt' ? 'Voltar' : 'Back'}</span>
+      </button>
       <h1
         style={{
-          fontFamily: 'var(--font-condensed)',
+          fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
           fontSize: 'clamp(3.5rem, 8vw, 7rem)',
-          fontWeight: 700,
+          fontWeight: 300,
           color: '#242424',
           lineHeight: 0.95,
           letterSpacing: '-0.02em',

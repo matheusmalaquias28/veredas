@@ -1,5 +1,8 @@
 import { Resend } from 'resend'
 
+/** Node na Vercel evita Edge, onde o SDK do Resend pode falhar. */
+export const runtime = 'nodejs'
+
 /** Destino fixo: formulários sempre chegam neste inbox. */
 const TO_EMAIL = 'contato@veredas.art'
 const FROM_EMAIL =
@@ -109,6 +112,7 @@ export async function POST(request: Request) {
       typeof error === 'object' && error !== null && 'message' in error
         ? String((error as { message: string }).message)
         : String(error)
+    console.error('[send-email] Resend:', error)
     return Response.json({ error: message || 'Resend error' }, { status: 502 })
   }
 

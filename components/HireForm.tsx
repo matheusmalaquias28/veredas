@@ -2,8 +2,7 @@
 
 import { FormEvent, useState } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
-
-const CONTACT_EMAIL = 'contato@veredas.art'
+import FormSuccessModal from '@/components/FormSuccessModal'
 
 interface HireFormProps {
   artistName?: string
@@ -15,8 +14,9 @@ export default function HireForm({ artistName }: HireFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [feedback, setFeedback] = useState('')
   const [phone, setPhone] = useState('')
+  const [successOpen, setSuccessOpen] = useState(false)
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget
     setIsSubmitting(true)
@@ -25,27 +25,29 @@ export default function HireForm({ artistName }: HireFormProps) {
     const formData = new FormData(form)
     const name = String(formData.get('name') ?? '').trim()
     const email = String(formData.get('email') ?? '').trim()
-    const phone = String(formData.get('phone') ?? '').trim()
+    const phoneValue = String(formData.get('phone') ?? '').trim()
     const message = String(formData.get('message') ?? '').trim()
 
-    const subject = artistName
-      ? `${copy.subjectPrefix} — ${artistName}`
-      : `${copy.subjectPrefix} — Veredas`
-
-    const bodyLines = [
-      `${copy.name}: ${name}`,
-      `${copy.email}: ${email}`,
-      `${copy.phone}: ${phone}`,
-    ]
-    if (artistName) bodyLines.push(`Artista: ${artistName}`)
-    bodyLines.push('', message)
-    const body = bodyLines.join('\n')
-
     try {
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-      setFeedback(copy.success)
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'hire',
+          name,
+          email,
+          phone: phoneValue,
+          message,
+          artistName: artistName ?? '',
+        }),
+      })
+      if (!res.ok) {
+        setFeedback(copy.fallback)
+        return
+      }
       form.reset()
       setPhone('')
+      setSuccessOpen(true)
     } catch {
       setFeedback(copy.fallback)
     } finally {
@@ -61,6 +63,7 @@ export default function HireForm({ artistName }: HireFormProps) {
 
   return (
     <section className="border-t border-white/10 px-6 py-20 md:px-10 md:py-28">
+      <FormSuccessModal open={successOpen} onClose={() => setSuccessOpen(false)} />
       <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
         <div>
           <h2

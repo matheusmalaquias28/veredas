@@ -2,33 +2,45 @@
 
 import { FormEvent, useState } from 'react'
 import { useLang } from '@/contexts/LanguageContext'
-
-const CONTACT_EMAIL = 'contato@veredas.art'
+import FormSuccessModal from '@/components/FormSuccessModal'
 
 export default function ContactForm() {
   const { translations: t } = useLang()
   const copy = t.contatoPage
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const [successOpen, setSuccessOpen] = useState(false)
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    const form = event.currentTarget
     setIsSubmitting(true)
     setFeedback('')
 
-    const formData = new FormData(event.currentTarget)
+    const formData = new FormData(form)
     const name = String(formData.get('name') ?? '').trim()
     const email = String(formData.get('email') ?? '').trim()
     const subject = String(formData.get('subject') ?? '').trim()
     const message = String(formData.get('message') ?? '').trim()
 
-    const finalSubject = subject || `Contato via site - ${name || 'Veredas'}`
-    const body = [`Nome: ${name}`, `E-mail: ${email}`, '', message].join('\n')
-
     try {
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(finalSubject)}&body=${encodeURIComponent(body)}`
-      setFeedback(copy.success)
-      event.currentTarget.reset()
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'contact',
+          name,
+          email,
+          subject,
+          message,
+        }),
+      })
+      if (!res.ok) {
+        setFeedback(copy.fallback)
+        return
+      }
+      form.reset()
+      setSuccessOpen(true)
     } catch {
       setFeedback(copy.fallback)
     } finally {
@@ -37,7 +49,9 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5 rounded-2xl border border-black/10 bg-white/40 p-6 md:p-8">
+    <>
+      <FormSuccessModal open={successOpen} onClose={() => setSuccessOpen(false)} />
+      <form onSubmit={onSubmit} className="space-y-5 rounded-2xl border border-black/10 bg-white/40 p-6 md:p-8">
       <h2
         className="text-[clamp(1.4rem,2.5vw,2rem)] uppercase tracking-[0.03em] text-[#242424]"
         style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
@@ -102,5 +116,6 @@ export default function ContactForm() {
 
       {feedback ? <p className="text-sm text-neutral-700">{feedback}</p> : null}
     </form>
+    </>
   )
 }

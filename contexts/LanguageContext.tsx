@@ -68,9 +68,9 @@ const t = {
       message: 'Mensagem',
       submit: 'Enviar',
       submitting: 'Enviando...',
-      success: 'Mensagem preparada. Abra seu e-mail para concluir o envio.',
+      success: 'Mensagem enviada com sucesso. Responderemos em breve.',
       fallback:
-        'Não foi possível abrir o app de e-mail. Envie para contato@veredas.art com sua mensagem.',
+        'Não foi possível enviar agora. Tente de novo ou envie para contato@veredas.art.',
     },
     hireForm: {
       title: 'Contrate nosso elenco',
@@ -82,10 +82,15 @@ const t = {
       message: 'Mensagem',
       submit: 'Enviar mensagem',
       submitting: 'Enviando...',
-      success: 'Mensagem preparada. Abra seu e-mail para concluir o envio.',
+      success: 'Mensagem enviada com sucesso. Responderemos em breve.',
       fallback:
-        'Não foi possível abrir o app de e-mail. Envie para contato@veredas.art com sua mensagem.',
+        'Não foi possível enviar agora. Tente de novo ou envie para contato@veredas.art.',
       subjectPrefix: 'Contratação',
+    },
+    formSuccess: {
+      title: 'Recebemos seu contato! Entraremos em contato em breve!',
+      tagline: 'Gente que toca antes de encostar.',
+      close: 'Fechar',
     },
     sobre: {
       p1: 'A Veredas é uma agência de gestão de carreira e empresariamento artístico, dedicada à construção de caminhos consistentes para artistas de alto nível de atuação, com foco no audiovisual e em projetos com marcas.',
@@ -216,9 +221,9 @@ const t = {
       message: 'Message',
       submit: 'Send',
       submitting: 'Sending...',
-      success: 'Message prepared. Open your e-mail app to finish sending.',
+      success: 'Message sent successfully. We will get back to you soon.',
       fallback:
-        'We could not open your e-mail app. Please send your message to contato@veredas.art.',
+        'Could not send right now. Try again or email contato@veredas.art.',
     },
     hireForm: {
       title: 'Hire our cast',
@@ -230,10 +235,15 @@ const t = {
       message: 'Message',
       submit: 'Send message',
       submitting: 'Sending...',
-      success: 'Message prepared. Open your e-mail app to finish sending.',
+      success: 'Message sent successfully. We will get back to you soon.',
       fallback:
-        'We could not open your e-mail app. Please send your message to contato@veredas.art.',
+        'Could not send right now. Try again or email contato@veredas.art.',
       subjectPrefix: 'Hiring',
+    },
+    formSuccess: {
+      title: 'We received your message! We will get in touch soon.',
+      tagline: 'People who touch before they land.',
+      close: 'Close',
     },
     sobre: {
       p1: 'Veredas is a career management and artistic entrepreneurship agency, committed to building consistent paths for highly accomplished artists, with a focus on audiovisual work and brand-led projects.',

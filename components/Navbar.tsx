@@ -15,8 +15,8 @@ const STRIPE_W_FINAL = 5
 /** Largura “grande” de cada faixa antes de encolher (abertura). */
 const STRIPE_W_LARGE = 92
 
-/** Base `em` para itens do menu (`20em` ≈ 100px com base 5px). */
-const MENU_EM_BASE_PX = 5
+/** Base `em` para itens do menu (reduz ~30% vs. 5px para tipografia menor). */
+const MENU_EM_BASE_PX = 3.5
 
 const navListVariants = {
   hidden: {},
@@ -368,7 +368,7 @@ export default function Navbar() {
                     >
                       {t.nav.casting}
                       <motion.span
-                        className="inline-block shrink-0 text-[20px] leading-none text-[var(--brand-blue)]"
+                        className="inline-block shrink-0 text-[14px] leading-none text-[var(--brand-blue)]"
                         animate={{ rotate: castingOpen ? 180 : 0 }}
                         transition={{ duration: 0.25 }}
                         aria-hidden

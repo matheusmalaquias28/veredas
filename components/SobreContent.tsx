@@ -125,7 +125,7 @@ export default function SobreContent() {
       </div>
 
       <div className="border-b border-black/20 py-7">
-        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
           <p>{labels.essence}</p>
           <p className="mt-3">{labels.direction}</p>
         </div>
@@ -138,7 +138,7 @@ export default function SobreContent() {
       </div>
 
       <div className="border-b border-black/20 py-7">
-        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
           {labels.process}
         </div>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
@@ -148,11 +148,11 @@ export default function SobreContent() {
               className="group border-l border-black/20 pl-3 md:pl-4"
               onClick={() => setActiveMedia((prev) => (prev === `process-${index}` ? null : `process-${index}`))}
             >
-              <p className="text-[0.48rem] font-semibold uppercase tracking-[0.09em] text-[#242424]/65">
+              <p className="text-[0.874rem] font-semibold uppercase tracking-[0.09em] text-[#242424]/65">
                 {String(index + 1).padStart(2, '0')}.
               </p>
               <h3
-                className="mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.11em] text-[#111]"
+                className="mt-1 text-[1.128rem] font-semibold uppercase tracking-[0.11em] text-[#111]"
                 style={{ fontFamily: 'var(--font-sans)' }}
               >
                 {step.title}
@@ -180,7 +180,7 @@ export default function SobreContent() {
       </div>
 
       <div className="border-b border-black/20 py-7">
-        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
           {labels.commitment}
         </div>
         <div className="grid gap-5 md:grid-cols-[1fr_420px] md:items-center md:gap-8">
@@ -208,11 +208,11 @@ export default function SobreContent() {
       </div>
 
       <div className="border-b border-black/20 py-6">
-        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+        <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
           {labels.signature}
         </div>
         <p
-          className="text-[clamp(1.65rem,3.5vw,2.6rem)] italic leading-[1.02] tracking-[-0.01em] text-[#1c1c1c]"
+          className="text-[clamp(3.003rem,6.37vw,4.732rem)] italic leading-[1.02] tracking-[-0.01em] text-[#1c1c1c]"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           {t.sobre.tagline}
@@ -221,10 +221,10 @@ export default function SobreContent() {
 
       <div className="pt-7">
         <div className="mb-5 border-b border-black/20 pb-3">
-          <p className="text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+          <p className="text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
             {labels.team}
           </p>
-          <p className="mt-2 text-[0.5rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
+          <p className="mt-2 text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
             {labels.heading}
           </p>
         </div>
@@ -256,10 +256,10 @@ export default function SobreContent() {
                       activeFounder === key ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
                     }`}
                   >
-                    <p className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-[var(--brand-pink)]">
+                    <p className="mt-1 text-[1.238rem] font-semibold uppercase tracking-[0.1em] text-[var(--brand-pink)]">
                       {founder.role}
                     </p>
-                    <p className="mt-1 text-[1.33rem] uppercase leading-none tracking-[-0.008em] text-[var(--brand-sun)]">
+                    <p className="mt-1 text-[2.421rem] uppercase leading-none tracking-[-0.008em] text-[var(--brand-sun)]">
                       {founder.name}
                     </p>
                     <a

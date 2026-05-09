@@ -48,22 +48,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 function Gallery({ images }: { images: any[] }) {
   if (!images?.length) return null
   return (
-    <div className="grid grid-cols-2 gap-3 md:flex md:flex-row md:items-center md:gap-3">
-      {images.map((img, i) => {
-        const url = img?.asset ? urlFor(img).width(1200).height(1600).fit('crop').url() : null
-        if (!url) return null
-        return (
-          <div key={i} className="relative aspect-[3/4] w-full overflow-hidden md:flex-1">
-            <Image
-              src={url}
-              alt=""
-              fill
-              sizes="(max-width: 767px) 50vw, 30vw"
-              className="object-cover"
-            />
-          </div>
-        )
-      })}
+    <div className="mx-auto w-[60%] min-w-0 max-w-full">
+      <div className="grid grid-cols-2 gap-3 md:flex md:flex-row md:items-center md:gap-3">
+        {images.map((img, i) => {
+          const url = img?.asset ? urlFor(img).width(1200).height(1600).fit('crop').url() : null
+          if (!url) return null
+          return (
+            <div key={i} className="relative aspect-[3/4] w-full overflow-hidden md:flex-1">
+              <Image
+                src={url}
+                alt=""
+                fill
+                sizes="(max-width: 767px) 30vw, 18vw"
+                className="object-cover"
+              />
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -80,7 +82,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
   return (
     <main className="min-h-screen bg-black text-neutral-200">
       {/* Back link */}
-      <div className="fixed top-0 left-0 right-0 z-[90] flex h-[72px] items-center px-6 md:px-10">
+      <div className="fixed top-[92px] left-0 right-0 z-[90] flex items-center px-6 py-3 md:px-10">
         <Link
           href="/criativos"
           className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400 transition-colors hover:text-white"

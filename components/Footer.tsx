@@ -119,7 +119,7 @@ export default function Footer({ instagramUrl }: { instagramUrl?: string | null 
               </Link>
             </div>
 
-            <p className="flex flex-wrap items-center justify-start gap-2 text-xs text-neutral-400 md:justify-end">
+            <p className="flex w-full flex-wrap items-center justify-center gap-2 text-xs text-neutral-400 md:w-auto md:justify-end">
               <span>{f.developedBy}</span>
               <a
                 href={ENERGY_URL}

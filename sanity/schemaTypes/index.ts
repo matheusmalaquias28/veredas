@@ -3,6 +3,7 @@ import { bannerType } from './banner'
 import { configuracoesType } from './configuracoes'
 import { producaoType } from './producao'
 import { criativoType } from './criativo'
+import { videoProducaoType } from './videoProducao'
 
 export const schemaTypes = [
   atorType,
@@ -12,4 +13,5 @@ export const schemaTypes = [
   configuracoesType,
   producaoType,
   criativoType,
+  videoProducaoType,
 ]

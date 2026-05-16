@@ -41,9 +41,11 @@ export default function Navbar() {
   const [castingOpen, setCastingOpen] = useState(false)
   const [stripePhase, setStripePhase] = useState<StripePhase>('enter')
   const [scrolled, setScrolled] = useState(false)
+  const [pastHomeHero, setPastHomeHero] = useState(false)
   const { lang, translations: t, setLang } = useLang()
   const submenuId = useId()
   const pathname = usePathname() ?? ''
+  const isHome = pathname === '/'
 
   /** Páginas individuais (slug) usam fundo preto — header precisa ficar claro. */
   const isDarkPage = useMemo(() => {
@@ -62,6 +64,11 @@ export default function Navbar() {
   useEffect(() => {
     const update = () => {
       setScrolled(window.scrollY > 60)
+      if (isHome) {
+        setPastHomeHero(window.scrollY >= window.innerHeight * 0.98)
+      } else {
+        setPastHomeHero(true)
+      }
     }
     update()
     window.addEventListener('scroll', update, { passive: true })
@@ -70,10 +77,13 @@ export default function Navbar() {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
-  }, [])
+  }, [isHome])
 
   /** Controles e tipografia do header — claro em páginas com fundo preto. */
   const navForeground: 'dark' | 'light' = isDarkPage ? 'light' : 'dark'
+
+  /** Na home, header só aparece após a hero (primeira seção). */
+  const hideOnHomeHero = isHome && !pastHomeHero && !menuOpen
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -106,7 +116,11 @@ export default function Navbar() {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-[110] transition-all duration-500"
+        className={`fixed top-0 left-0 right-0 z-[110] transition-all duration-500 ${
+          hideOnHomeHero
+            ? 'pointer-events-none -translate-y-2 opacity-0'
+            : 'translate-y-0 opacity-100'
+        }`}
         style={{
           background: menuOpen
             ? 'transparent'

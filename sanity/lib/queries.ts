@@ -92,6 +92,15 @@ export const PRODUCOES_QUERY = defineQuery(`
   }
 `)
 
+export const VIDEOS_PRODUCOES_QUERY = defineQuery(`
+  *[_type == "videoProducao" && ativo == true] | order(ordem asc) {
+    _id,
+    titulo,
+    "videoUrl": video.asset->url,
+    imagem
+  }
+`)
+
 export const CRIATIVOS_QUERY = defineQuery(`
   *[_type == "criativo" && ativo == true] | order(nome asc) {
     _id,

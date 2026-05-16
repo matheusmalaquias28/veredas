@@ -26,6 +26,8 @@ const t = {
       titulo: 'Encontre o Elenco Perfeito',
       subtexto: 'Agência de casting para cinema, televisão e publicidade.',
       cta: 'Ver Elenco',
+      overlayTagline: 'VEREDAS — AGENCIAMENTO ARTÍSTICO',
+      rec: 'REC',
     },
     sections: {
       producoes: 'Produções',
@@ -179,6 +181,8 @@ const t = {
       titulo: 'Find the Perfect Cast',
       subtexto: 'Casting agency for cinema, television and advertising.',
       cta: 'View Cast',
+      overlayTagline: 'VEREDAS — ARTIST MANAGEMENT',
+      rec: 'REC',
     },
     sections: {
       producoes: 'Productions',

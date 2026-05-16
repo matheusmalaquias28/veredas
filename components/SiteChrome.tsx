@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import LenisSmoothScroll from '@/components/LenisSmoothScroll'
 import Preloader from '@/components/Preloader'
+import CustomCursor from '@/components/CustomCursor'
 
 export default function SiteChrome({
   children,
@@ -16,6 +17,7 @@ export default function SiteChrome({
 }) {
   return (
     <>
+      <CustomCursor />
       <LenisSmoothScroll />
       <Preloader images={preloaderImages} />
       <Navbar />

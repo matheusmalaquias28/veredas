@@ -11,14 +11,14 @@ export default function SobreAnimatedTitle() {
   return (
     <div className="px-6 pb-8 pt-28 md:px-10 md:pt-32">
       <p
-        className="mb-5 text-[0.528rem] font-semibold uppercase tracking-[0.18em] text-[#242424]/75 md:mb-6 md:text-[1.056rem]"
+        className="mb-5 text-[0.37rem] font-semibold uppercase tracking-[0.18em] text-[#242424]/75 md:mb-6 md:text-[0.739rem]"
         style={{ fontFamily: 'var(--font-sans)' }}
       >
         {eyebrow}
       </p>
 
       <h1
-        className="m-0 text-center text-[28.392vw] uppercase leading-[0.88] tracking-[-0.015em] text-[#111] md:text-[473px]"
+        className="m-0 text-center text-[19.874vw] uppercase leading-[0.88] tracking-[-0.015em] text-[#111] md:text-[331px]"
         style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
       >
         {TITLE}

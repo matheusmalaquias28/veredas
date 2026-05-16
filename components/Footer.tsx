@@ -1,14 +1,12 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useLang } from '@/contexts/LanguageContext'
 
 const ENERGY_URL = 'https://www.energymidia.com.br'
 const INSTAGRAM_URL = 'https://www.instagram.com/veredasagenciamento/'
-
-/** Laranja Energy / destaque do crédito */
-const ENERGY_ORANGE = '#f97316'
 
 function FooterHeading({ children }: { children: ReactNode }) {
   return (
@@ -121,16 +119,22 @@ export default function Footer({ instagramUrl }: { instagramUrl?: string | null 
               </Link>
             </div>
 
-            <p className="text-xs text-neutral-400 md:text-right">
-              {f.developedBy}{' '}
+            <p className="flex flex-wrap items-center justify-start gap-2 text-xs text-neutral-400 md:justify-end">
+              <span>{f.developedBy}</span>
               <a
                 href={ENERGY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold transition-opacity hover:opacity-90"
-                style={{ color: ENERGY_ORANGE }}
+                className="inline-flex shrink-0 transition-opacity hover:opacity-85"
+                aria-label={f.energy}
               >
-                {f.energy}
+                <Image
+                  src="/energy-logo.png"
+                  alt=""
+                  width={132}
+                  height={36}
+                  className="h-6 w-auto md:h-7"
+                />
               </a>
             </p>
           </div>

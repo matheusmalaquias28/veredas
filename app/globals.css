@@ -29,12 +29,6 @@
   box-sizing: border-box;
 }
 
-@media (pointer: fine) {
-  html.custom-cursor *, html.custom-cursor *::before, html.custom-cursor *::after {
-    cursor: none !important;
-  }
-}
-
 html {
   background: var(--background);
   color: var(--foreground);

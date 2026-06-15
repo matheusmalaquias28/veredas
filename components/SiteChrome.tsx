@@ -17,15 +17,16 @@ export default function SiteChrome({
 }) {
   useEffect(() => {
     document.documentElement.classList.remove('custom-cursor')
+    document.body.style.cursor = ''
   }, [])
 
   return (
-    <>
+    <div data-site-chrome="v0.1.4">
       <LenisSmoothScroll />
       <Preloader images={preloaderImages} />
       <Navbar />
       <main>{children}</main>
       <Footer instagramUrl={instagramUrl} />
-    </>
+    </div>
   )
 }

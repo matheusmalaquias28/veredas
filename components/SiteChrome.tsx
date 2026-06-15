@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import LenisSmoothScroll from '@/components/LenisSmoothScroll'
@@ -14,6 +15,10 @@ export default function SiteChrome({
   instagramUrl?: string | null
   preloaderImages?: string[]
 }) {
+  useEffect(() => {
+    document.documentElement.classList.remove('custom-cursor')
+  }, [])
+
   return (
     <>
       <LenisSmoothScroll />

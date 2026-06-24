@@ -24,8 +24,10 @@ export default function SiteChrome({
     <LenisProvider>
       <div data-site-chrome="v0.1.4">
         <Preloader images={preloaderImages} />
-        <Navbar />
-        <main>{children}</main>
+        <div className="relative z-[1000]">
+          <Navbar />
+        </div>
+        <main className="relative isolate z-0">{children}</main>
         <Footer instagramUrl={instagramUrl} />
       </div>
     </LenisProvider>

@@ -41,7 +41,6 @@ export default function Navbar() {
   const [castingOpen, setCastingOpen] = useState(false)
   const [stripePhase, setStripePhase] = useState<StripePhase>('enter')
   const [scrolled, setScrolled] = useState(false)
-  const [pastHomeHero, setPastHomeHero] = useState(false)
   const { lang, translations: t, setLang } = useLang()
   const submenuId = useId()
   const pathname = usePathname() ?? ''
@@ -64,42 +63,19 @@ export default function Navbar() {
   useEffect(() => {
     const update = () => {
       setScrolled(window.scrollY > 60)
-      if (isHome) {
-        const hero = document.getElementById('hero')
-        const heroUnlocked = hero?.dataset.heroUnlocked === 'true'
-        const heroScrollEnd = hero
-          ? hero.offsetTop + hero.offsetHeight - window.innerHeight
-          : window.innerHeight
-        const heroH = hero?.offsetHeight ?? 0
-        const compactHero = heroH <= window.innerHeight * 1.05
-        setPastHomeHero(
-          compactHero
-            ? Boolean(heroUnlocked)
-            : heroUnlocked &&
-                window.scrollY >= Math.max(heroScrollEnd - 8, window.innerHeight * 0.98)
-        )
-      } else {
-        setPastHomeHero(true)
-      }
     }
     update()
     window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update, { passive: true })
-    window.addEventListener('hero-scroll-unlock', update)
-    window.addEventListener('hero-scroll-lock', update)
+    window.addEventListener('resize', update)
     return () => {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
-      window.removeEventListener('hero-scroll-unlock', update)
-      window.removeEventListener('hero-scroll-lock', update)
     }
-  }, [isHome])
+  }, [])
 
-  /** Controles e tipografia do header — claro em páginas com fundo preto. */
-  const navForeground: 'dark' | 'light' = isDarkPage ? 'light' : 'dark'
-
-  /** Na home, header só aparece após a hero (primeira seção). */
-  const hideOnHomeHero = isHome && !pastHomeHero && !menuOpen
+  /** Controles claros sobre hero escuro ou páginas com fundo preto. */
+  const navForeground: 'dark' | 'light' =
+    isDarkPage || (isHome && !scrolled) ? 'light' : 'dark'
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -132,11 +108,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-[110] transition-all duration-500 ${
-          hideOnHomeHero
-            ? 'pointer-events-none -translate-y-2 opacity-0'
-            : 'translate-y-0 opacity-100'
-        }`}
+        className="fixed top-0 left-0 right-0 z-[1010] translate-y-0 opacity-100 transition-all duration-500"
         style={{
           background: menuOpen
             ? 'transparent'
@@ -154,7 +126,7 @@ export default function Navbar() {
             onClick={closeMenu}
             aria-label="Veredas"
             className={`flex items-center ${
-              menuOpen ? 'text-[#0a0a0a]' : isDarkPage ? 'text-white' : 'text-[#0a0a0a]'
+              menuOpen ? 'text-[#0a0a0a]' : navForeground === 'light' ? 'text-white' : 'text-[#0a0a0a]'
             }`}
           >
             <svg
@@ -234,7 +206,7 @@ export default function Navbar() {
               }}
               aria-label={menuOpen ? t.nav.close : 'Abrir menu'}
               aria-expanded={menuOpen}
-              className="relative z-[120] flex h-8 w-8 flex-col justify-center gap-[5px] p-0.5"
+              className="relative z-[1020] flex h-8 w-8 flex-col justify-center gap-[5px] p-0.5"
             >
               <span
                 className={`block h-[1.5px] w-full origin-center transition-all duration-300 ${
@@ -277,7 +249,7 @@ export default function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className="fixed inset-0 z-[100] flex h-full w-full flex-row"
+            className="fixed inset-0 z-[1000] flex h-full w-full flex-row"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -220,12 +220,12 @@ export default function Hero({
     <section
       id="hero"
       ref={containerRef}
-      className="relative h-[100svh] w-full md:h-[200svh]"
+      className="relative z-0 h-[100svh] w-full md:h-[200svh]"
       data-hero-unlocked={heroExpanded ? 'true' : 'false'}
     >
       <div
         data-hero-sticky
-        className="top-0 h-[100svh] w-full overflow-hidden bg-black md:sticky"
+        className="relative top-0 z-0 h-[100svh] w-full overflow-hidden bg-black md:sticky"
       >
         <motion.div
           className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
@@ -257,7 +257,7 @@ export default function Hero({
         </motion.div>
 
         <motion.div
-          className="pointer-events-none absolute inset-0 z-10 origin-center will-change-transform"
+          className="pointer-events-none absolute inset-0 z-[1] origin-center will-change-transform"
           style={{
             scale: reducedMotion ? VIDEO_SCALE_END : videoScale,
           }}
@@ -278,7 +278,7 @@ export default function Hero({
 
         {!reducedMotion && (
           <motion.div
-            className="pointer-events-none absolute inset-0 z-20"
+            className="pointer-events-none absolute inset-0 z-[2]"
             style={{ opacity: viewfinderOpacity }}
           >
             <HeroViewfinder

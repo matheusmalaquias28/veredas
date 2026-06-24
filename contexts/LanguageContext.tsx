@@ -116,7 +116,7 @@ const t = {
       },
     },
     labels: {
-      nascimento: 'Nascimento',
+      idade: 'Idade',
       altura: 'Altura',
       local: 'Local',
       idiomas: 'Idiomas',
@@ -271,7 +271,7 @@ const t = {
       },
     },
     labels: {
-      nascimento: 'Birth Year',
+      idade: 'Age',
       altura: 'Height',
       local: 'Location',
       idiomas: 'Languages',

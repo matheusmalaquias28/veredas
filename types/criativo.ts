@@ -18,4 +18,5 @@ export interface Criativo {
   galeria3?: SanityImage[]
   site?: string
   instagram?: string
+  heroDimensions?: { width?: number; height?: number }
 }

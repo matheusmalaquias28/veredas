@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import LenisSmoothScroll from '@/components/LenisSmoothScroll'
+import { LenisProvider } from '@/contexts/LenisContext'
 import Preloader from '@/components/Preloader'
 
 export default function SiteChrome({
@@ -21,12 +21,13 @@ export default function SiteChrome({
   }, [])
 
   return (
-    <div data-site-chrome="v0.1.4">
-      <LenisSmoothScroll />
-      <Preloader images={preloaderImages} />
-      <Navbar />
-      <main>{children}</main>
-      <Footer instagramUrl={instagramUrl} />
-    </div>
+    <LenisProvider>
+      <div data-site-chrome="v0.1.4">
+        <Preloader images={preloaderImages} />
+        <Navbar />
+        <main>{children}</main>
+        <Footer instagramUrl={instagramUrl} />
+      </div>
+    </LenisProvider>
   )
 }

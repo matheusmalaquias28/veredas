@@ -24,12 +24,20 @@ export default function SobreAnimatedTitle() {
         {TITLE}
       </h1>
 
-      <div className="mt-5 grid grid-cols-1 border-y border-black/25 py-2 text-[0.91rem] font-semibold uppercase tracking-[0.13em] text-[#242424]/80 md:mt-7 md:grid-cols-3">
-        <span style={{ fontFamily: 'var(--font-sans)' }}>VEREDAS</span>
-        <span className="text-left md:text-center" style={{ fontFamily: 'var(--font-sans)' }}>
+      <div className="mt-5 grid grid-cols-1 border-y border-black/25 py-2 text-[0.91rem] font-semibold uppercase tracking-[0.13em] text-[#242424]/80 md:mt-7 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:gap-6">
+        <span className="md:whitespace-nowrap" style={{ fontFamily: 'var(--font-sans)' }}>
+          VEREDAS
+        </span>
+        <span
+          className="text-left md:whitespace-nowrap md:text-center md:text-[clamp(0.62rem,0.72vw,0.91rem)]"
+          style={{ fontFamily: 'var(--font-sans)' }}
+        >
           AGENCIA DE GESTAO E EMPRESARIAMENTO ARTISTICO
         </span>
-        <span className="text-left md:text-right" style={{ fontFamily: 'var(--font-sans)' }}>
+        <span
+          className="text-left md:whitespace-nowrap md:text-right"
+          style={{ fontFamily: 'var(--font-sans)' }}
+        >
           SAO PAULO, BRASIL
         </span>
       </div>

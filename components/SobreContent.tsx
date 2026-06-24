@@ -212,7 +212,7 @@ export default function SobreContent() {
           {labels.signature}
         </div>
         <p
-          className="text-[clamp(3.003rem,6.37vw,4.732rem)] italic leading-[1.02] tracking-[-0.01em] text-[#1c1c1c]"
+          className="text-[clamp(3.003rem,6.37vw,4.732rem)] md:text-[clamp(1.802rem,3.822vw,2.839rem)] italic leading-[1.02] tracking-[-0.01em] text-[#1c1c1c]"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           {t.sobre.tagline}
@@ -264,7 +264,7 @@ export default function SobreContent() {
                     </p>
                     <a
                       href={`mailto:${FOUNDER_EMAILS[key]}`}
-                      className="pointer-events-auto mt-2 inline-block text-[0.73rem] uppercase tracking-[0.09em] text-white underline decoration-white/60 underline-offset-2 transition-colors hover:decoration-white"
+                      className="pointer-events-auto mt-2 inline-block text-[0.73rem] lowercase tracking-[0.09em] text-white underline decoration-white/60 underline-offset-2 transition-colors hover:decoration-white"
                     >
                       {FOUNDER_EMAILS[key]}
                     </a>

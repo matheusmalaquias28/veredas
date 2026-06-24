@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { PortableText } from 'next-sanity'
 import { useLang } from '@/contexts/LanguageContext'
+import { profilePortableTextComponents } from '@/components/portableTextComponents'
+import { formatAge } from '@/lib/ageFromBirthYear'
 import type { ElencoProfile, ElencoTipo } from '@/types/elenco'
 
 function listHref(tipo: ElencoTipo) {
@@ -14,7 +16,7 @@ function listHref(tipo: ElencoTipo) {
 }
 
 export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile }) {
-  const { translations: t } = useLang()
+  const { lang, translations: t } = useLang()
   const tipo = artist._type as ElencoTipo
   const backHref = listHref(tipo)
 
@@ -49,8 +51,8 @@ export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile })
       <div className="flex flex-col gap-2 text-sm text-neutral-300">
         {artist.anoNascimento != null && (
           <p>
-            <span className="font-medium text-white">{t.labels.nascimento}:</span>{' '}
-            {artist.anoNascimento}
+            <span className="font-medium text-white">{t.labels.idade}:</span>{' '}
+            {formatAge(artist.anoNascimento, lang)}
           </p>
         )}
         {artist.altura && (
@@ -86,20 +88,7 @@ export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile })
               <PortableText
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 value={artist.biografia as any}
-                components={{
-                  marks: {
-                    link: ({ value, children }) => (
-                      <a
-                        href={value?.href}
-                        target={value?.blank ? '_blank' : '_self'}
-                        rel="noopener noreferrer"
-                        className="underline underline-offset-2 hover:opacity-70"
-                      >
-                        {children}
-                      </a>
-                    ),
-                  },
-                }}
+                components={profilePortableTextComponents}
               />
             </div>
           )}

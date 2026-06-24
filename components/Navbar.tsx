@@ -65,7 +65,14 @@ export default function Navbar() {
     const update = () => {
       setScrolled(window.scrollY > 60)
       if (isHome) {
-        setPastHomeHero(window.scrollY >= window.innerHeight * 0.98)
+        const hero = document.getElementById('hero')
+        const heroUnlocked = hero?.dataset.heroUnlocked === 'true'
+        const heroScrollEnd = hero
+          ? hero.offsetTop + hero.offsetHeight - window.innerHeight
+          : window.innerHeight
+        setPastHomeHero(
+          heroUnlocked && window.scrollY >= Math.max(heroScrollEnd - 8, window.innerHeight * 0.98)
+        )
       } else {
         setPastHomeHero(true)
       }
@@ -73,9 +80,13 @@ export default function Navbar() {
     update()
     window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update, { passive: true })
+    window.addEventListener('hero-scroll-unlock', update)
+    window.addEventListener('hero-scroll-lock', update)
     return () => {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
+      window.removeEventListener('hero-scroll-unlock', update)
+      window.removeEventListener('hero-scroll-lock', update)
     }
   }, [isHome])
 
@@ -108,10 +119,10 @@ export default function Navbar() {
   }
 
   const linkClass =
-    'block w-full text-center [font-family:var(--font-montserrat)] text-[12em] font-thin uppercase leading-[0.92] tracking-[0.02em] text-[#242424] transition-colors hover:text-[var(--brand-blue)]'
+    'block w-full text-center [font-family:var(--font-bebas)] text-[22em] uppercase leading-[0.92] tracking-[0.03em] text-[#242424] transition-colors hover:text-[var(--brand-blue)]'
 
   const subLinkClass =
-    'block py-2 text-center [font-family:var(--font-montserrat)] text-[4.2em] font-thin uppercase tracking-[0.12em] text-[#242424]/85 transition-colors hover:text-[var(--brand-blue)]'
+    'block py-2 text-center [font-family:var(--font-bebas)] text-[12em] uppercase tracking-[0.06em] text-[#242424]/85 transition-colors hover:text-[var(--brand-blue)]'
 
   return (
     <>

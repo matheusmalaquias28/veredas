@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { PortableText } from 'next-sanity'
 import { urlFor } from '@/sanity/lib/image'
 import type { Criativo } from '@/types/criativo'
+import { profilePortableTextComponents } from '@/components/portableTextComponents'
 
 interface Props {
   criativo: Criativo
@@ -102,21 +103,7 @@ export default function CriativoModal({ criativo, isSelected, onClose, onSelect 
               >
                 <PortableText
                   value={criativo.biografiaCurta}
-                  components={{
-                    marks: {
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      link: ({ value, children }: any) => (
-                        <a
-                          href={value?.href}
-                          target={value?.blank ? '_blank' : '_self'}
-                          rel="noopener noreferrer"
-                          className="underline underline-offset-2 hover:opacity-80"
-                        >
-                          {children}
-                        </a>
-                      ),
-                    },
-                  }}
+                  components={profilePortableTextComponents}
                 />
               </div>
             )}

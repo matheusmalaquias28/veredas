@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { formatAge } from '@/lib/ageFromBirthYear'
 import type { ElencoProfile } from '@/types/elenco'
 
 async function blobToBase64(blob: Blob): Promise<string> {
@@ -98,7 +99,7 @@ async function generatePDF(artist: ElencoProfile) {
   let y = photoY
 
   const dados: { label: string; valor: string }[] = []
-  if (artist.anoNascimento) dados.push({ label: 'Nascimento', valor: String(artist.anoNascimento) })
+  if (artist.anoNascimento) dados.push({ label: 'Idade', valor: formatAge(artist.anoNascimento) })
   if (artist.altura) dados.push({ label: 'Altura', valor: artist.altura })
   if (artist.cidadeEstado) dados.push({ label: 'Local', valor: artist.cidadeEstado })
   if (artist.idiomas?.length) dados.push({ label: 'Idiomas', valor: artist.idiomas.join(', ') })

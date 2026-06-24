@@ -6,6 +6,7 @@ import { client } from '@/sanity/lib/client'
 import { ELENCO_BY_SLUG_QUERY } from '@/sanity/lib/queries'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { formatAge } from '@/lib/ageFromBirthYear'
 import type { ElencoListItem, ElencoProfile } from '@/types/elenco'
 
 interface Props {
@@ -98,7 +99,7 @@ async function generatePDF(artists: ElencoListItem[]) {
 
     // Dados
     const dados: { label: string; valor: string }[] = []
-    if (p.anoNascimento) dados.push({ label: 'Nascimento', valor: String(p.anoNascimento) })
+    if (p.anoNascimento) dados.push({ label: 'Idade', valor: formatAge(p.anoNascimento) })
     if (p.altura) dados.push({ label: 'Altura', valor: p.altura })
     if (p.cidadeEstado) dados.push({ label: 'Local', valor: p.cidadeEstado })
     if (p.idiomas?.length) dados.push({ label: 'Idiomas', valor: p.idiomas.join(', ') })

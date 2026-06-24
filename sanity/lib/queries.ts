@@ -121,6 +121,7 @@ export const CRIATIVO_BY_SLUG_QUERY = defineQuery(`
     slug,
     funcao,
     fotoPrincipal,
+    "heroDimensions": fotoPrincipal.asset->metadata.dimensions,
     biografiaCurta,
     bloco1,
     galeria1,

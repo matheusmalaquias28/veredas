@@ -8,20 +8,15 @@ import { urlFor } from '@/sanity/lib/image'
 import type { Criativo } from '@/types/criativo'
 import CriativoDownloadButton from '@/components/CriativoDownloadButton'
 import HireForm from '@/components/HireForm'
+import { profilePortableTextComponents } from '@/components/portableTextComponents'
 import { portableTextToPlain } from '@/lib/portableTextToPlain'
 
-const portableComponents = {
-  marks: {
+const criativoPortableComponents = {
+  ...profilePortableTextComponents,
+  block: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    link: ({ value, children }: any) => (
-      <a
-        href={value?.href}
-        target={value?.blank ? '_blank' : '_self'}
-        rel="noopener noreferrer"
-        className="underline underline-offset-2 hover:opacity-70"
-      >
-        {children}
-      </a>
+    normal: ({ children }: any) => (
+      <p className="mb-[1.95rem] last:mb-0">{children}</p>
     ),
   },
 }
@@ -48,10 +43,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 function Gallery({ images }: { images: any[] }) {
   if (!images?.length) return null
   return (
-    <div className="mx-auto w-[60%] min-w-0 max-w-full">
-      <div className="grid grid-cols-2 gap-3 md:flex md:flex-row md:items-center md:gap-3">
+    <div className="mx-auto w-[78%] min-w-0 max-w-full">
+      <div className="grid grid-cols-2 gap-4 md:flex md:flex-row md:items-center md:gap-4">
         {images.map((img, i) => {
-          const url = img?.asset ? urlFor(img).width(1200).height(1600).fit('crop').url() : null
+          const url = img?.asset ? urlFor(img).width(1560).height(2080).fit('crop').url() : null
           if (!url) return null
           return (
             <div key={i} className="relative aspect-[3/4] w-full overflow-hidden md:flex-1">
@@ -59,7 +54,7 @@ function Gallery({ images }: { images: any[] }) {
                 src={url}
                 alt=""
                 fill
-                sizes="(max-width: 767px) 30vw, 18vw"
+                sizes="(max-width: 767px) 39vw, 24vw"
                 className="object-cover"
               />
             </div>
@@ -75,9 +70,14 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
   const criativo: Criativo | null = await client.fetch(CRIATIVO_BY_SLUG_QUERY, { slug })
   if (!criativo) notFound()
 
-  const heroUrl = criativo.fotoPrincipal?.asset
-    ? urlFor(criativo.fotoPrincipal).width(1000).height(1333).fit('crop').url()
-    : null
+  const heroDims = criativo.heroDimensions
+  const heroAspectW = heroDims?.width ?? 3
+  const heroAspectH = heroDims?.height ?? 4
+
+  const heroUrl =
+    criativo.fotoPrincipal?.asset?._ref
+      ? urlFor(criativo.fotoPrincipal).width(1920).fit('max').quality(90).url()
+      : null
 
   return (
     <main className="min-h-screen bg-black text-neutral-200">
@@ -94,39 +94,47 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
         </Link>
       </div>
 
-      {/* Hero full-bleed com degradê inferior */}
-      <section className="relative min-h-[78svh] overflow-hidden">
+      {/* Hero full-bleed */}
+      <section className="relative h-[50svh] min-h-[50svh] w-full overflow-hidden bg-black md:h-[100svh] md:min-h-[100svh]">
         {heroUrl ? (
-          <>
-            {/* Camada de preenchimento da hero */}
-            <Image
-              src={heroUrl}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center-top grayscale blur-[2px] opacity-45 scale-105"
-            />
-            {/* Imagem principal sem corte */}
-            <Image
-              src={heroUrl}
-              alt={criativo.nome}
-              fill
-              priority
-              sizes="100vw"
-              className="object-contain"
-            />
-          </>
+          <div className="absolute inset-0 flex items-start justify-center">
+            <div
+              className="relative h-full w-auto max-w-full shrink-0"
+              style={{ aspectRatio: `${heroAspectW} / ${heroAspectH}` }}
+            >
+              <Image
+                src={heroUrl}
+                alt={criativo.nome}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
+
+              {/* Mescla nas bordas da imagem */}
+              <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
+                <div className="absolute inset-y-0 left-0 w-[22%] bg-gradient-to-r from-black to-transparent" />
+                <div className="absolute inset-y-0 right-0 w-[22%] bg-gradient-to-l from-black to-transparent" />
+                <div className="absolute inset-x-0 top-0 h-[14%] bg-gradient-to-b from-black to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-black via-black/80 to-transparent" />
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="absolute inset-0 bg-neutral-900" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/45 to-black" />
 
-        <div className="relative z-10 mx-auto flex min-h-[78svh] w-full max-w-[1200px] flex-col items-center justify-end px-8 pb-16 text-center md:px-14 md:pb-20">
+        {/* Reforço inferior para legibilidade do título em toda a largura */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[65%] bg-gradient-to-t from-black via-black/60 to-transparent md:h-[52%]"
+        />
+
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px] flex-col items-center justify-end px-6 pb-4 text-center md:px-14 md:pb-12">
           <h1
+            className="text-[clamp(1.75rem,7vw,3.8rem)] md:text-[clamp(2.3rem,6vw,3.8rem)]"
             style={{
               fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-              fontSize: 'clamp(2.3rem, 6vw, 3.8rem)',
               fontWeight: 300,
               color: '#ffffff',
               lineHeight: 0.98,
@@ -143,20 +151,19 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
               {criativo.funcao}
             </p>
           )}
-          <div className="mt-4 h-px w-full max-w-[760px] bg-white/20" />
         </div>
       </section>
 
       {/* Conteúdo */}
-      <section className="mx-auto w-full max-w-[980px] px-8 pb-24 pt-8 md:px-14 md:pb-32 md:pt-10">
+      <section className="mx-auto w-full max-w-[980px] px-8 pb-24 pt-3 md:px-14 md:pb-32 md:pt-4">
 
         {/* Bio */}
         {criativo.biografiaCurta?.length ? (
           <div
-            className="mx-auto mt-1 leading-relaxed text-neutral-300"
+            className="mx-auto italic leading-[1.75] text-neutral-300"
             style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
           >
-            <PortableText value={criativo.biografiaCurta} components={portableComponents} />
+            <PortableText value={criativo.biografiaCurta} components={criativoPortableComponents} />
           </div>
         ) : null}
 
@@ -165,10 +172,10 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <>
             <div className="my-8 h-px bg-white/10" />
             <div
-              className="mx-auto leading-relaxed text-neutral-300"
+              className="mx-auto leading-[1.75] text-neutral-300"
               style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
             >
-              <PortableText value={criativo.bloco1} components={portableComponents} />
+              <PortableText value={criativo.bloco1} components={criativoPortableComponents} />
             </div>
           </>
         ) : null}
@@ -183,10 +190,10 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <>
             <div className="my-8 h-px bg-white/10" />
             <div
-              className="mx-auto leading-relaxed text-neutral-300"
+              className="mx-auto leading-[1.75] text-neutral-300"
               style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
             >
-              <PortableText value={criativo.bloco2} components={portableComponents} />
+              <PortableText value={criativo.bloco2} components={criativoPortableComponents} />
             </div>
           </>
         ) : null}
@@ -201,10 +208,10 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <>
             <div className="my-8 h-px bg-white/10" />
             <div
-              className="mx-auto leading-relaxed text-neutral-300"
+              className="mx-auto leading-[1.75] text-neutral-300"
               style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
             >
-              <PortableText value={criativo.bloco3} components={portableComponents} />
+              <PortableText value={criativo.bloco3} components={criativoPortableComponents} />
             </div>
           </>
         ) : null}

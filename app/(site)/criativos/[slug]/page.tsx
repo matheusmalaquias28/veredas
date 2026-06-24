@@ -145,8 +145,8 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           </h1>
           {criativo.funcao && (
             <p
-              className="mt-2 font-semibold uppercase"
-              style={{ fontSize: '0.56rem', letterSpacing: '0.22em', color: '#4277f6' }}
+              className="mt-2 text-[clamp(0.72rem,2.4vw,0.9rem)] font-semibold uppercase tracking-[0.2em]"
+              style={{ color: '#4277f6' }}
             >
               {criativo.funcao}
             </p>
@@ -161,7 +161,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
         {criativo.biografiaCurta?.length ? (
           <div
             className="mx-auto italic leading-[1.75] text-neutral-300"
-            style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
+            style={{ fontSize: '1.05rem', maxWidth: '63ch' }}
           >
             <PortableText value={criativo.biografiaCurta} components={criativoPortableComponents} />
           </div>
@@ -172,7 +172,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <>
             <div className="my-8 h-px bg-white/10" />
             <div
-              className="mx-auto leading-[1.75] text-neutral-300"
+              className="mx-auto text-justify leading-[1.75] text-neutral-300"
               style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
             >
               <PortableText value={criativo.bloco1} components={criativoPortableComponents} />
@@ -190,7 +190,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <>
             <div className="my-8 h-px bg-white/10" />
             <div
-              className="mx-auto leading-[1.75] text-neutral-300"
+              className="mx-auto text-justify leading-[1.75] text-neutral-300"
               style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
             >
               <PortableText value={criativo.bloco2} components={criativoPortableComponents} />
@@ -208,7 +208,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           <>
             <div className="my-8 h-px bg-white/10" />
             <div
-              className="mx-auto leading-[1.75] text-neutral-300"
+              className="mx-auto italic text-justify leading-[1.75] text-neutral-300"
               style={{ fontSize: '1.05rem', maxWidth: '74ch' }}
             >
               <PortableText value={criativo.bloco3} components={criativoPortableComponents} />

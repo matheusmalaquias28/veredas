@@ -8,9 +8,9 @@ import { useLang } from '@/contexts/LanguageContext'
 /* Cada polaroid: posição como % do container (left/top), rotação e z-index.
    As cards se sobrepõem levemente na faixa branca inferior — não na área de imagem. */
 const POLAROIDS = [
-  { src: '/agencia-polaroid-1.jpg', isVideo: false, rotate: -7, leftCls: 'left-[48%] md:left-[58%]', top: '5%',  z: 1, delay: 0.1 },
-  { src: '/agencia-video.mp4',      isVideo: true,  rotate:  5, leftCls: 'left-[55%] md:left-[65%]', top: '30%', z: 2, delay: 0.2 },
-  { src: '/agencia-polaroid-2.jpg', isVideo: false, rotate: -2, leftCls: 'left-[44%] md:left-[54%]', top: '55%', z: 3, delay: 0   },
+  { src: '/agencia-video.mp4',      isVideo: true,  rotate: -7, leftCls: 'left-[48%] md:left-[58%]', top: '5%',  z: 1, delay: 0.1 },
+  { src: '/agencia-video-2.mp4',    isVideo: true,  rotate:  5, leftCls: 'left-[55%] md:left-[65%]', top: '30%', z: 2, delay: 0.2 },
+  { src: '/agencia-polaroid-1.png', isVideo: false, rotate: -2, leftCls: 'left-[44%] md:left-[54%]', top: '55%', z: 3, delay: 0   },
 ]
 
 export default function HomeAgenciaSection() {

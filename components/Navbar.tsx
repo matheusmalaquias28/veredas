@@ -70,8 +70,13 @@ export default function Navbar() {
         const heroScrollEnd = hero
           ? hero.offsetTop + hero.offsetHeight - window.innerHeight
           : window.innerHeight
+        const heroH = hero?.offsetHeight ?? 0
+        const compactHero = heroH <= window.innerHeight * 1.05
         setPastHomeHero(
-          heroUnlocked && window.scrollY >= Math.max(heroScrollEnd - 8, window.innerHeight * 0.98)
+          compactHero
+            ? Boolean(heroUnlocked)
+            : heroUnlocked &&
+                window.scrollY >= Math.max(heroScrollEnd - 8, window.innerHeight * 0.98)
         )
       } else {
         setPastHomeHero(true)

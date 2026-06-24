@@ -39,6 +39,7 @@ export default function Preloader({ images = [] }: { images?: string[] }) {
       setVisible(false)
       document.body.style.overflow = prevBodyOverflow || ''
       document.documentElement.style.overflow = prevHtmlOverflow || ''
+      window.scrollTo(0, 0)
       window.dispatchEvent(new CustomEvent('preloader-complete'))
     }
 

@@ -21,22 +21,18 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     const html = document.documentElement
     html.classList.add('lenis', 'lenis-smooth')
 
-    const isTouch =
-      window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window
-
     const instance = new Lenis({
       autoRaf: true,
       lerp: 0.038,
       wheelMultiplier: 0.78,
       touchMultiplier: 0.92,
-      syncTouch: isTouch,
-      syncTouchLerp: 0.12,
       smoothWheel: true,
       anchors: true,
       allowNestedScroll: true,
       stopInertiaOnNavigate: true,
     })
     setLenis(instance)
+    instance.start()
 
     return () => {
       instance.destroy()

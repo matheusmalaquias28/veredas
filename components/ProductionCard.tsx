@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 
-interface Producao {
+export interface Producao {
   _id: string
   titulo: string
   imagem: { asset: { _ref: string } }

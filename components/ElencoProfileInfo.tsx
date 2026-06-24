@@ -22,11 +22,11 @@ export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile })
 
   return (
     <div className="flex flex-1 flex-col px-8 pb-24 pt-28 md:px-14 md:pb-32 md:pt-32">
-      <div className="hidden md:block">
+      <div>
         {artist.funcao && (
           <p
-            className="mb-3 font-semibold uppercase"
-            style={{ fontSize: '0.65rem', letterSpacing: '0.25em', color: '#4277f6' }}
+            className="mb-2 font-semibold uppercase md:mb-3"
+            style={{ fontSize: '0.56rem', letterSpacing: '0.22em', color: '#4277f6' }}
           >
             {artist.funcao}
           </p>
@@ -34,7 +34,7 @@ export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile })
         <h1
           style={{
             fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
-            fontSize: 'clamp(3rem, 6vw, 5.5rem)',
+            fontSize: 'clamp(2rem, 9vw, 5.5rem)',
             fontWeight: 300,
             color: '#ffffff',
             lineHeight: 0.95,

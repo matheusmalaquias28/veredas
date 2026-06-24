@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   motion,
   useMotionValue,
@@ -11,6 +11,7 @@ import { useLang } from '@/contexts/LanguageContext'
 import { useLenis } from '@/contexts/LenisContext'
 import HeroViewfinder from '@/components/HeroViewfinder'
 import type { PortableTextBlock } from 'next-sanity'
+import type Lenis from 'lenis'
 
 function videoMimeType(url: string): string {
   const path = url.split('?')[0].toLowerCase()
@@ -35,6 +36,27 @@ const VIDEO_SCALE_START = 0.2
 const VIDEO_SCALE_END = 1
 const PROGRESS_COMPLETE = 0.999
 
+function getScrollY(lenis: Lenis | null): number {
+  if (lenis) return lenis.scroll
+  return window.scrollY
+}
+
+function clampScrollToHeroEnd(
+  scrollY: number,
+  animationEnd: number,
+  lenis: Lenis | null
+): number {
+  if (scrollY <= animationEnd) return scrollY
+
+  if (lenis) {
+    lenis.scrollTo(animationEnd, { immediate: true, force: true })
+  } else {
+    window.scrollTo({ top: animationEnd, behavior: 'auto' })
+  }
+
+  return animationEnd
+}
+
 export default function Hero({
   videoUrl,
   titulo,
@@ -42,56 +64,57 @@ export default function Hero({
   const { translations: t } = useLang()
   const lenis = useLenis()
   const containerRef = useRef<HTMLElement>(null)
+  const stickyRef = useRef<HTMLDivElement>(null)
   const titleContainerRef = useRef<HTMLHeadingElement>(null)
   const titleTextRef = useRef<HTMLSpanElement>(null)
   const heroExpandedRef = useRef(false)
-  const clampingRef = useRef(false)
+  const lenisRef = useRef<Lenis | null>(null)
+  const reducedMotionRef = useRef(false)
   const resolvedUrl = videoUrl ?? '/hero.mp4'
   const word = (titulo ?? 'VEREDAS').toUpperCase()
   const [titleFontPx, setTitleFontPx] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
   const [heroExpanded, setHeroExpanded] = useState(false)
-  const [viewportHeight, setViewportHeight] = useState(0)
 
   const progress = useMotionValue(0)
   const videoScale = useTransform(progress, [0, 1], [VIDEO_SCALE_START, VIDEO_SCALE_END])
   const viewfinderOpacity = useTransform(progress, [0, 0.35], [1, 0])
   const titleOpacity = useTransform(progress, [0.55, 1], [1, 0])
 
-  const getHeroMetrics = () => {
-    const hero = containerRef.current
-    if (!hero) return null
+  lenisRef.current = lenis
+  reducedMotionRef.current = reducedMotion
 
-    const range = window.innerHeight
+  const getHeroMetrics = useCallback(() => {
+    const hero = containerRef.current
+    const sticky = stickyRef.current
+    if (!hero || !sticky) return null
+
     const heroTop = hero.offsetTop
+    const range = Math.max(1, hero.offsetHeight - sticky.offsetHeight)
     const animationEnd = heroTop + range
 
-    return { hero, range, heroTop, animationEnd }
-  }
+    return { range, heroTop, animationEnd }
+  }, [])
 
-  const syncHeroProgress = () => {
-    if (reducedMotion) return
+  const syncHeroProgress = useCallback(() => {
+    if (reducedMotionRef.current) return
 
     const metrics = getHeroMetrics()
     if (!metrics) return
 
+    const lenisInstance = lenisRef.current
     const { range, heroTop, animationEnd } = metrics
-    const localScroll = Math.max(0, window.scrollY - heroTop)
+    const rawScrollY = getScrollY(lenisInstance)
+    const scrollY = heroExpandedRef.current
+      ? rawScrollY
+      : clampScrollToHeroEnd(rawScrollY, animationEnd, lenisInstance)
+
+    const localScroll = Math.max(0, scrollY - heroTop)
     const nextProgress = Math.min(1, localScroll / range)
 
     progress.set(nextProgress)
-
-    if (!heroExpandedRef.current && window.scrollY > animationEnd) {
-      clampingRef.current = true
-      if (lenis) {
-        lenis.scrollTo(animationEnd, { immediate: true })
-      } else {
-        window.scrollTo({ top: animationEnd, behavior: 'auto' })
-      }
-      clampingRef.current = false
-    }
-  }
+  }, [getHeroMetrics, progress])
 
   useMotionValueEvent(progress, 'change', (value) => {
     const expanded = value >= PROGRESS_COMPLETE
@@ -107,7 +130,7 @@ export default function Hero({
   useLayoutEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setReducedMotion(prefersReduced)
-    setViewportHeight(window.innerHeight)
+    reducedMotionRef.current = prefersReduced
 
     if (prefersReduced) {
       progress.set(1)
@@ -117,14 +140,24 @@ export default function Hero({
   }, [progress])
 
   useEffect(() => {
-    const onResize = () => {
-      setViewportHeight(window.innerHeight)
+    if (reducedMotion) return
+
+    const onMetricsChange = () => {
+      lenisRef.current?.resize()
       syncHeroProgress()
     }
 
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  })
+    syncHeroProgress()
+    window.addEventListener('resize', onMetricsChange)
+    window.visualViewport?.addEventListener('resize', onMetricsChange)
+    window.visualViewport?.addEventListener('scroll', onMetricsChange)
+
+    return () => {
+      window.removeEventListener('resize', onMetricsChange)
+      window.visualViewport?.removeEventListener('resize', onMetricsChange)
+      window.visualViewport?.removeEventListener('scroll', onMetricsChange)
+    }
+  }, [reducedMotion, syncHeroProgress])
 
   useEffect(() => {
     if (reducedMotion) return
@@ -135,11 +168,19 @@ export default function Hero({
     const onLenisScroll = () => syncHeroProgress()
     lenis?.on('scroll', onLenisScroll)
 
+    let rafId = 0
+    const tick = () => {
+      if (!heroExpandedRef.current) syncHeroProgress()
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+
     return () => {
       window.removeEventListener('scroll', syncHeroProgress)
       lenis?.off('scroll', onLenisScroll)
+      cancelAnimationFrame(rafId)
     }
-  }, [lenis, reducedMotion, viewportHeight])
+  }, [lenis, reducedMotion, syncHeroProgress])
 
   useLayoutEffect(() => {
     const fitTitle = () => {
@@ -187,19 +228,18 @@ export default function Hero({
   }, [word])
 
   const titleScaleY = isMobile ? HERO_TITLE_SCALE_Y_MOBILE : HERO_TITLE_SCALE_Y_DESKTOP
-  const sectionHeightPx = viewportHeight > 0 ? viewportHeight * 2 : undefined
 
   return (
     <section
       id="hero"
       ref={containerRef}
-      className="relative w-full"
-      style={{ height: sectionHeightPx ?? '200dvh' }}
+      className="relative h-[200svh] w-full"
       data-hero-unlocked={heroExpanded ? 'true' : 'false'}
     >
       <div
-        className="sticky top-0 w-full overflow-hidden bg-black"
-        style={{ height: viewportHeight > 0 ? viewportHeight : '100dvh' }}
+        ref={stickyRef}
+        data-hero-sticky
+        className="sticky top-0 h-[100svh] w-full overflow-hidden bg-black"
       >
         <motion.div
           className="pointer-events-none absolute inset-0 z-0 overflow-hidden"

@@ -41,22 +41,6 @@ function getScrollY(lenis: Lenis | null): number {
   return window.scrollY
 }
 
-function clampScrollToHeroEnd(
-  scrollY: number,
-  animationEnd: number,
-  lenis: Lenis | null
-): number {
-  if (scrollY <= animationEnd) return scrollY
-
-  if (lenis) {
-    lenis.scrollTo(animationEnd, { immediate: true, force: true })
-  } else {
-    window.scrollTo({ top: animationEnd, behavior: 'auto' })
-  }
-
-  return animationEnd
-}
-
 export default function Hero({
   videoUrl,
   titulo,
@@ -68,6 +52,7 @@ export default function Hero({
   const titleContainerRef = useRef<HTMLHeadingElement>(null)
   const titleTextRef = useRef<HTMLSpanElement>(null)
   const heroExpandedRef = useRef(false)
+  const clampingRef = useRef(false)
   const lenisRef = useRef<Lenis | null>(null)
   const reducedMotionRef = useRef(false)
   const resolvedUrl = videoUrl ?? '/hero.mp4'
@@ -90,31 +75,50 @@ export default function Hero({
     const sticky = stickyRef.current
     if (!hero || !sticky) return null
 
+    const stickyHeight = sticky.offsetHeight
+    const heroHeight = hero.offsetHeight
+    if (stickyHeight < 50 || heroHeight <= stickyHeight + 10) return null
+
     const heroTop = hero.offsetTop
-    const range = Math.max(1, hero.offsetHeight - sticky.offsetHeight)
+    const range = heroHeight - stickyHeight
     const animationEnd = heroTop + range
 
     return { range, heroTop, animationEnd }
   }, [])
 
   const syncHeroProgress = useCallback(() => {
-    if (reducedMotionRef.current) return
+    if (reducedMotionRef.current || clampingRef.current) return
 
     const metrics = getHeroMetrics()
     if (!metrics) return
 
     const lenisInstance = lenisRef.current
     const { range, heroTop, animationEnd } = metrics
-    const rawScrollY = getScrollY(lenisInstance)
-    const scrollY = heroExpandedRef.current
-      ? rawScrollY
-      : clampScrollToHeroEnd(rawScrollY, animationEnd, lenisInstance)
+    let scrollY = getScrollY(lenisInstance)
+
+    if (!heroExpandedRef.current && scrollY > animationEnd + 0.5) {
+      clampingRef.current = true
+      scrollY = animationEnd
+      if (lenisInstance) {
+        lenisInstance.scrollTo(animationEnd, { immediate: true, force: true })
+      } else {
+        window.scrollTo({ top: animationEnd, behavior: 'auto' })
+      }
+      requestAnimationFrame(() => {
+        clampingRef.current = false
+      })
+    }
 
     const localScroll = Math.max(0, scrollY - heroTop)
     const nextProgress = Math.min(1, localScroll / range)
 
     progress.set(nextProgress)
   }, [getHeroMetrics, progress])
+
+  const remeasureHero = useCallback(() => {
+    lenisRef.current?.resize()
+    requestAnimationFrame(() => syncHeroProgress())
+  }, [syncHeroProgress])
 
   useMotionValueEvent(progress, 'change', (value) => {
     const expanded = value >= PROGRESS_COMPLETE
@@ -142,22 +146,19 @@ export default function Hero({
   useEffect(() => {
     if (reducedMotion) return
 
-    const onMetricsChange = () => {
-      lenisRef.current?.resize()
-      syncHeroProgress()
-    }
+    remeasureHero()
 
-    syncHeroProgress()
+    const onMetricsChange = () => remeasureHero()
     window.addEventListener('resize', onMetricsChange)
+    window.addEventListener('preloader-complete', onMetricsChange)
     window.visualViewport?.addEventListener('resize', onMetricsChange)
-    window.visualViewport?.addEventListener('scroll', onMetricsChange)
 
     return () => {
       window.removeEventListener('resize', onMetricsChange)
+      window.removeEventListener('preloader-complete', onMetricsChange)
       window.visualViewport?.removeEventListener('resize', onMetricsChange)
-      window.visualViewport?.removeEventListener('scroll', onMetricsChange)
     }
-  }, [reducedMotion, syncHeroProgress])
+  }, [reducedMotion, remeasureHero])
 
   useEffect(() => {
     if (reducedMotion) return
@@ -168,19 +169,17 @@ export default function Hero({
     const onLenisScroll = () => syncHeroProgress()
     lenis?.on('scroll', onLenisScroll)
 
-    let rafId = 0
-    const tick = () => {
-      if (!heroExpandedRef.current) syncHeroProgress()
-      rafId = requestAnimationFrame(tick)
-    }
-    rafId = requestAnimationFrame(tick)
-
     return () => {
       window.removeEventListener('scroll', syncHeroProgress)
       lenis?.off('scroll', onLenisScroll)
-      cancelAnimationFrame(rafId)
     }
   }, [lenis, reducedMotion, syncHeroProgress])
+
+  useEffect(() => {
+    if (!lenis || reducedMotion) return
+    const t = window.setTimeout(remeasureHero, 50)
+    return () => window.clearTimeout(t)
+  }, [lenis, reducedMotion, remeasureHero])
 
   useLayoutEffect(() => {
     const fitTitle = () => {

@@ -26,12 +26,11 @@ export function LenisProvider({ children }: { children: ReactNode }) {
 
     const instance = new Lenis({
       autoRaf: true,
-      lerp: isTouch ? 0.08 : 0.038,
+      lerp: 0.038,
       wheelMultiplier: 0.78,
-      touchMultiplier: 1,
+      touchMultiplier: 0.92,
       syncTouch: isTouch,
       syncTouchLerp: 0.12,
-      touchInertiaExponent: isTouch ? 1.1 : 1.7,
       smoothWheel: true,
       anchors: true,
       allowNestedScroll: true,

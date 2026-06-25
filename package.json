@@ -7,10 +7,11 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "seed:ordem": "node scripts/seed-ordem.mjs"
+    "seed:order-rank": "node scripts/seed-order-rank.mjs"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
+    "@sanity/orderable-document-list": "^2.0.4",
     "@sanity/vision": "^5.24.0",
     "canvas-confetti": "^1.9.4",
     "framer-motion": "^12.38.0",
@@ -32,6 +33,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "lexorank": "^1.0.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

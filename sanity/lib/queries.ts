@@ -1,26 +1,26 @@
 import { defineQuery } from 'next-sanity'
 
 export const ATORES_QUERY = defineQuery(`
-  *[_type == "ator"] | order(ordem asc, nome asc) {
+  *[_type == "ator"] | order(orderRank asc, nome asc) {
     _id, _type, nome, slug, fotoPrincipal, funcao, destaque
   }
 `)
 
 export const ATRIZES_QUERY = defineQuery(`
-  *[_type == "atriz"] | order(ordem asc, nome asc) {
+  *[_type == "atriz"] | order(orderRank asc, nome asc) {
     _id, _type, nome, slug, fotoPrincipal, funcao, destaque
   }
 `)
 
 export const ESTRANGEIROS_QUERY = defineQuery(`
-  *[_type == "estrangeiro"] | order(ordem asc, nome asc) {
+  *[_type == "estrangeiro"] | order(orderRank asc, nome asc) {
     _id, _type, nome, slug, fotoPrincipal, funcao, destaque
   }
 `)
 
 /** Home / filtros: todos os tipos de elenco. */
 export const ELENCO_ALL_QUERY = defineQuery(`
-  *[_type in ["ator", "atriz", "estrangeiro"]] | order(ordem asc, nome asc) {
+  *[_type in ["ator", "atriz", "estrangeiro"]] | order(orderRank asc, nome asc) {
     _id, _type, nome, slug, fotoPrincipal, funcao, destaque
   }
 `)
@@ -34,7 +34,7 @@ export const ELENCO_BY_SLUG_QUERY = defineQuery(`
 `)
 
 export const ELENCO_DESTAQUE_QUERY = defineQuery(`
-  *[(_type == "ator" || _type == "atriz" || _type == "estrangeiro") && destaque == true] | order(ordem asc, nome asc) {
+  *[(_type == "ator" || _type == "atriz" || _type == "estrangeiro") && destaque == true] | order(orderRank asc, nome asc) {
     _id, _type, nome, slug, fotoPrincipal, funcao
   }
 `)
@@ -102,7 +102,7 @@ export const VIDEOS_PRODUCOES_QUERY = defineQuery(`
 `)
 
 export const CRIATIVOS_QUERY = defineQuery(`
-  *[_type == "criativo" && ativo == true] | order(ordem asc, nome asc) {
+  *[_type == "criativo" && ativo == true] | order(orderRank asc, nome asc) {
     _id,
     nome,
     slug,

@@ -101,7 +101,7 @@ async function generatePDF(artist: ElencoProfile) {
   const dados: { label: string; valor: string }[] = []
   if (artist.anoNascimento) dados.push({ label: 'Idade', valor: formatAge(artist.anoNascimento) })
   if (artist.altura) dados.push({ label: 'Altura', valor: artist.altura })
-  if (artist.cidadeEstado) dados.push({ label: 'Local', valor: artist.cidadeEstado })
+  if (artist.cidadeEstado) dados.push({ label: 'Naturalidade', valor: artist.cidadeEstado })
   if (artist.idiomas?.length) dados.push({ label: 'Idiomas', valor: artist.idiomas.join(', ') })
 
   for (const d of dados) {

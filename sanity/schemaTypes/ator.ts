@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 import { richTextField } from './richText'
 
 const camposComuns = [
@@ -82,11 +83,16 @@ const camposComuns = [
   }),
 ]
 
+function elencoFields(type: 'ator' | 'atriz' | 'estrangeiro') {
+  return [orderRankField({ type }), ...camposComuns]
+}
+
 export const atorType = defineType({
   name: 'ator',
   title: 'Atores',
   type: 'document',
-  fields: camposComuns,
+  orderings: [orderRankOrdering],
+  fields: elencoFields('ator'),
   preview: {
     select: {
       title: 'nome',
@@ -100,7 +106,8 @@ export const atrizType = defineType({
   name: 'atriz',
   title: 'Atrizes',
   type: 'document',
-  fields: camposComuns,
+  orderings: [orderRankOrdering],
+  fields: elencoFields('atriz'),
   preview: {
     select: {
       title: 'nome',
@@ -114,7 +121,8 @@ export const estraneiroType = defineType({
   name: 'estrangeiro',
   title: 'Estrangeiros',
   type: 'document',
-  fields: camposComuns,
+  orderings: [orderRankOrdering],
+  fields: elencoFields('estrangeiro'),
   preview: {
     select: {
       title: 'nome',

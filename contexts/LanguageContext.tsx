@@ -118,7 +118,7 @@ const t = {
     labels: {
       idade: 'Idade',
       altura: 'Altura',
-      local: 'Local',
+      local: 'Naturalidade',
       idiomas: 'Idiomas',
     },
     actions: {
@@ -273,7 +273,7 @@ const t = {
     labels: {
       idade: 'Age',
       altura: 'Height',
-      local: 'Location',
+      local: 'Place of birth',
       idiomas: 'Languages',
     },
     actions: {

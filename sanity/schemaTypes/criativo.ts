@@ -1,11 +1,14 @@
 import { defineField, defineType } from 'sanity'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 import { richTextField } from './richText'
 
 export const criativoType = defineType({
   name: 'criativo',
   title: 'Criativo',
   type: 'document',
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({ type: 'criativo' }),
     defineField({
       name: 'nome',
       title: 'Nome',

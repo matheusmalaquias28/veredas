@@ -1,14 +1,21 @@
 import { defineField, defineType } from 'sanity'
-import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 import { richTextField } from './richText'
 
 export const criativoType = defineType({
   name: 'criativo',
   title: 'Criativo',
   type: 'document',
-  orderings: [orderRankOrdering],
+  orderings: [
+    {
+      title: 'Ordem de exibição',
+      name: 'ordemAsc',
+      by: [
+        { field: 'ordem', direction: 'asc' },
+        { field: 'nome', direction: 'asc' },
+      ],
+    },
+  ],
   fields: [
-    orderRankField({ type: 'criativo' }),
     defineField({
       name: 'nome',
       title: 'Nome',
@@ -21,6 +28,14 @@ export const criativoType = defineType({
       type: 'slug',
       options: { source: 'nome' },
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'ordem',
+      title: 'Ordem de exibição',
+      type: 'number',
+      description: 'Número menor aparece primeiro (1, 2, 3…). A lista no site segue este campo.',
+      initialValue: 0,
+      validation: (rule) => rule.integer().min(0),
     }),
     defineField({
       name: 'funcao',
@@ -80,6 +95,13 @@ export const criativoType = defineType({
     }),
   ],
   preview: {
-    select: { title: 'nome', subtitle: 'funcao', media: 'fotoPrincipal' },
+    select: { title: 'nome', subtitle: 'funcao', ordem: 'ordem', media: 'fotoPrincipal' },
+    prepare({ title, subtitle, ordem }) {
+      const prefix = ordem != null && ordem > 0 ? `#${ordem} · ` : ''
+      return {
+        title,
+        subtitle: `${prefix}${subtitle ?? ''}`.trim() || undefined,
+      }
+    },
   },
 })

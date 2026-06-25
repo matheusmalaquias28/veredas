@@ -20,26 +20,12 @@ function useGridCols() {
     const apply = () => {
       const mobile = window.matchMedia('(max-width: 767px)').matches
       setIsMobile(mobile)
-      if (mobile) {
-        setCols(2)
-        return
-      }
-      if (window.matchMedia('(min-width: 1280px)').matches) setCols(5)
-      else if (window.matchMedia('(min-width: 1024px)').matches) setCols(4)
-      else setCols(3)
+      setCols(mobile ? 2 : 3)
     }
     apply()
     const mq768 = window.matchMedia('(max-width: 767px)')
-    const mq1024 = window.matchMedia('(min-width: 1024px)')
-    const mq1280 = window.matchMedia('(min-width: 1280px)')
     mq768.addEventListener('change', apply)
-    mq1024.addEventListener('change', apply)
-    mq1280.addEventListener('change', apply)
-    return () => {
-      mq768.removeEventListener('change', apply)
-      mq1024.removeEventListener('change', apply)
-      mq1280.removeEventListener('change', apply)
-    }
+    return () => mq768.removeEventListener('change', apply)
   }, [])
 
   return { cols, isMobile }

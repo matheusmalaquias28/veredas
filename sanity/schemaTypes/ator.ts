@@ -1,6 +1,14 @@
 import { defineField, defineType } from 'sanity'
-import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 import { richTextField } from './richText'
+
+const ordemField = defineField({
+  name: 'ordem',
+  title: 'Ordem de exibição',
+  type: 'number',
+  description: 'Número menor aparece primeiro (1, 2, 3…). A lista no site segue este campo.',
+  initialValue: 0,
+  validation: (rule) => rule.integer().min(0),
+})
 
 const camposComuns = [
   defineField({
@@ -16,6 +24,7 @@ const camposComuns = [
     options: { source: 'nome' },
     validation: (rule) => rule.required(),
   }),
+  ordemField,
   defineField({
     name: 'destaque',
     title: 'Destaque na Home',
@@ -83,51 +92,66 @@ const camposComuns = [
   }),
 ]
 
-function elencoFields(type: 'ator' | 'atriz' | 'estrangeiro') {
-  return [orderRankField({ type }), ...camposComuns]
+const elencoOrderings = [
+  {
+    title: 'Ordem de exibição',
+    name: 'ordemAsc',
+    by: [
+      { field: 'ordem', direction: 'asc' as const },
+      { field: 'nome', direction: 'asc' as const },
+    ],
+  },
+]
+
+function elencoPreview() {
+  return {
+    select: {
+      title: 'nome',
+      subtitle: 'funcao',
+      ordem: 'ordem',
+      media: 'fotoPrincipal',
+    },
+    prepare({
+      title,
+      subtitle,
+      ordem,
+    }: {
+      title: string
+      subtitle?: string
+      ordem?: number
+    }) {
+      const prefix = ordem != null && ordem > 0 ? `#${ordem} · ` : ''
+      return {
+        title,
+        subtitle: `${prefix}${subtitle ?? ''}`.trim() || undefined,
+      }
+    },
+  }
 }
 
 export const atorType = defineType({
   name: 'ator',
   title: 'Atores',
   type: 'document',
-  orderings: [orderRankOrdering],
-  fields: elencoFields('ator'),
-  preview: {
-    select: {
-      title: 'nome',
-      subtitle: 'funcao',
-      media: 'fotoPrincipal',
-    },
-  },
+  orderings: elencoOrderings,
+  fields: camposComuns,
+  preview: elencoPreview(),
 })
 
 export const atrizType = defineType({
   name: 'atriz',
   title: 'Atrizes',
   type: 'document',
-  orderings: [orderRankOrdering],
-  fields: elencoFields('atriz'),
-  preview: {
-    select: {
-      title: 'nome',
-      subtitle: 'funcao',
-      media: 'fotoPrincipal',
-    },
-  },
+  orderings: elencoOrderings,
+  fields: camposComuns,
+  preview: elencoPreview(),
 })
 
 export const estraneiroType = defineType({
   name: 'estrangeiro',
   title: 'Estrangeiros',
   type: 'document',
-  orderings: [orderRankOrdering],
-  fields: elencoFields('estrangeiro'),
-  preview: {
-    select: {
-      title: 'nome',
-      subtitle: 'funcao',
-      media: 'fotoPrincipal',
-    },
-  },
+  orderings: elencoOrderings,
+  fields: camposComuns,
+  preview: elencoPreview(),
 })

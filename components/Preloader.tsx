@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLang } from '@/contexts/LanguageContext'
 const MIN_MS = 2000
 const TOTAL_STEPS = 100
 const DEFAULT_IMAGES = ['/sobre-agencia.png', '/Veredas_92.png']
 
 export default function Preloader({ images = [] }: { images?: string[] }) {
+  const { translations: t } = useLang()
   const [visible, setVisible] = useState(true)
   const [progress, setProgress] = useState(0)
   const [imageIndex, setImageIndex] = useState(0)
@@ -84,7 +86,7 @@ export default function Preloader({ images = [] }: { images?: string[] }) {
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-black"
           role="status"
           aria-live="polite"
-          aria-label="Carregando Veredas"
+          aria-label={t.preloader.loadingAria}
           initial={{ opacity: 1 }}
           exit={{
             clipPath: 'inset(100% 0 0 0)',
@@ -99,7 +101,7 @@ export default function Preloader({ images = [] }: { images?: string[] }) {
                   className="text-[clamp(2.3rem,10vw,4rem)] uppercase leading-[0.92] tracking-[0.02em] text-white"
                   style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
                 >
-                  VEREDAS
+                  {t.brand.name}
                 </p>
                 <p
                   className="text-[clamp(1.6rem,7vw,3rem)] uppercase text-white"
@@ -113,7 +115,7 @@ export default function Preloader({ images = [] }: { images?: string[] }) {
                 className="hidden justify-self-end text-[clamp(4rem,12vw,8.8rem)] uppercase leading-[0.92] tracking-[0.02em] text-white md:block"
                 style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
               >
-                VEREDAS
+                {t.brand.name}
               </p>
 
               <div className="relative">

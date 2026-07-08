@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { useLocalizedField } from '@/hooks/useLocalizedField'
 import type { Criativo } from '@/types/criativo'
 
 interface Props {
@@ -61,6 +62,10 @@ export default function CriativoCard({
   onToggleSelect,
 }: Props) {
   const { translations: t } = useLang()
+  const { string } = useLocalizedField()
+  const nome = string(criativo.nome, criativo.nomeEn)
+  const funcao = string(criativo.funcao, criativo.funcaoEn)
+
   const imageUrl = criativo.fotoPrincipal?.asset
     ? urlFor(criativo.fotoPrincipal).width(800).height(1067).fit('crop').url()
     : null
@@ -96,7 +101,7 @@ export default function CriativoCard({
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={criativo.nome}
+            alt={nome}
             fill
             sizes="(max-width: 767px) 45vw, 22vw"
             className="object-cover object-center"
@@ -136,12 +141,12 @@ export default function CriativoCard({
         {isExpanded && (
           <div className="absolute inset-0 flex flex-col justify-between p-4 md:p-5">
             <div className="min-w-0 pr-2">
-              {criativo.funcao && (
+              {funcao && (
                 <p
                   className="mb-2 font-semibold uppercase tracking-[0.22em] text-[var(--brand-sun)]"
                   style={{ fontSize: 'clamp(0.72rem, 2.2vw, 0.95rem)' }}
                 >
-                  {criativo.funcao}
+                  {funcao}
                 </p>
               )}
               <h2
@@ -151,7 +156,7 @@ export default function CriativoCard({
                   fontSize: 'clamp(1.25rem, 4.2vw, 2.4rem)',
                 }}
               >
-                {criativo.nome}
+                {nome}
               </h2>
             </div>
 

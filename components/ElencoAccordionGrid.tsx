@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLang } from '@/contexts/LanguageContext'
+import { useLocalizedField } from '@/hooks/useLocalizedField'
 import { urlFor } from '@/sanity/lib/image'
 import type { ElencoListItem } from '@/types/elenco'
 import ElencoSelectionBar from '@/components/ElencoSelectionBar'
@@ -75,6 +76,9 @@ function ElencoAccordionCard({
   onToggleSelect,
   labels,
 }: CardProps) {
+  const { string } = useLocalizedField()
+  const nome = string(artist.nome, artist.nomeEn)
+
   const imageUrl = artist.fotoPrincipal?.asset
     ? urlFor(artist.fotoPrincipal).width(720).height(960).fit('crop').url()
     : null
@@ -110,7 +114,7 @@ function ElencoAccordionCard({
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={artist.nome}
+            alt={nome}
             fill
             sizes="(max-width: 767px) 45vw, 22vw"
             className="object-cover"
@@ -142,7 +146,7 @@ function ElencoAccordionCard({
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              {artist.nome}
+              {nome}
             </h2>
 
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">

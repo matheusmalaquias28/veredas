@@ -124,7 +124,7 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={closeMenu}
-            aria-label="Veredas"
+            aria-label={t.nav.logoAria}
             className={`flex items-center ${
               menuOpen ? 'text-[#0a0a0a]' : navForeground === 'light' ? 'text-white' : 'text-[#0a0a0a]'
             }`}
@@ -204,7 +204,7 @@ export default function Navbar() {
                   setMenuOpen(true)
                 }
               }}
-              aria-label={menuOpen ? t.nav.close : 'Abrir menu'}
+              aria-label={menuOpen ? t.nav.close : t.nav.open}
               aria-expanded={menuOpen}
               className="relative z-[1020] flex h-8 w-8 flex-col justify-center gap-[5px] p-0.5"
             >
@@ -248,7 +248,7 @@ export default function Navbar() {
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Menu"
+            aria-label={t.nav.menuAria}
             className="fixed inset-0 z-[1000] flex h-full w-full flex-row"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

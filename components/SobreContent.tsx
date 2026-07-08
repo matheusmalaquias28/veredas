@@ -29,73 +29,10 @@ const FOUNDER_EMAILS: Record<FounderKey, string> = {
 }
 
 export default function SobreContent() {
-  const { lang, translations: t } = useLang()
+  const { translations: t } = useLang()
+  const sections = t.sobre.sections
   const [activeFounder, setActiveFounder] = useState<FounderKey | null>(null)
   const [activeMedia, setActiveMedia] = useState<string | null>(null)
-  const labels =
-    lang === 'pt'
-      ? {
-          essence: 'NOSSA ESSÊNCIA',
-          direction: 'DIREÇÃO E TRAVESSIA',
-          process: 'COMO TRABALHAMOS',
-          commitment: 'NOSSO COMPROMISSO',
-          signature: 'NOSSA ASSINATURA',
-          team: 'NOSSO TIME',
-          heading: 'CONHEÇA QUEM CONDUZ',
-          steps: [
-            {
-              title: 'CURADORIA',
-              body: 'Seleção rigorosa de talentos com potencial artístico, profissional e de mercado.',
-            },
-            {
-              title: 'ESTRATÉGIA',
-              body: 'Construção de posicionamento, repertório e narrativa de carreira sólida e autêntica.',
-            },
-            {
-              title: 'OPORTUNIDADES',
-              body: 'Conexão com projetos no audiovisual e com marcas alinhadas ao perfil de cada artista.',
-            },
-            {
-              title: 'RELAÇÕES',
-              body: 'Relacionamento ativo com produtoras, plataformas e parceiros estratégicos.',
-            },
-            {
-              title: 'ACOMPANHAMENTO',
-              body: 'Condução sensível e próxima em cada etapa da carreira, das escolhas ao mercado.',
-            },
-          ],
-        }
-      : {
-          essence: 'OUR ESSENCE',
-          direction: 'DIRECTION & CROSSING',
-          process: 'HOW WE WORK',
-          commitment: 'OUR COMMITMENT',
-          signature: 'OUR SIGNATURE',
-          team: 'OUR TEAM',
-          heading: 'MEET WHO LEADS',
-          steps: [
-            {
-              title: 'CURATION',
-              body: 'Rigorous talent selection with artistic, professional and market potential.',
-            },
-            {
-              title: 'STRATEGY',
-              body: 'Positioning, repertoire and career storytelling with long-term consistency.',
-            },
-            {
-              title: 'OPPORTUNITIES',
-              body: 'Connection with audiovisual projects and brands aligned to each profile.',
-            },
-            {
-              title: 'RELATIONSHIPS',
-              body: 'Active relationships with production companies, platforms and strategic partners.',
-            },
-            {
-              title: 'FOLLOW-UP',
-              body: 'Close and thoughtful guidance through every career decision and opportunity.',
-            },
-          ],
-        }
 
   return (
     <section className="mx-auto max-w-[1200px] border-t border-black/20 pb-16 md:pb-24">
@@ -119,15 +56,15 @@ export default function SobreContent() {
             className={`h-full w-full object-cover transition-[filter,transform] duration-500 ease-out md:group-hover:scale-[1.02] md:group-hover:grayscale-0 ${
               activeMedia === 'intro' ? 'scale-[1.02] grayscale-0' : 'grayscale'
             }`}
-            aria-label={lang === 'pt' ? 'Bastidores da agencia' : 'Agency backstage'}
+            aria-label={t.sobre.media.introAria}
           />
         </div>
       </div>
 
       <div className="border-b border-black/20 py-7">
         <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
-          <p>{labels.essence}</p>
-          <p className="mt-3">{labels.direction}</p>
+          <p>{sections.essence}</p>
+          <p className="mt-3">{sections.direction}</p>
         </div>
         <p
           className="max-w-4xl text-[30px] italic leading-[39px] tracking-[-0.008em] text-[#1f1f1f]"
@@ -139,10 +76,10 @@ export default function SobreContent() {
 
       <div className="border-b border-black/20 py-7">
         <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
-          {labels.process}
+          {sections.process}
         </div>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-          {labels.steps.map((step, index) => (
+          {t.sobre.processSteps.map((step, index) => (
             <article
               key={step.title}
               className="group border-l border-black/20 pl-3 md:pl-4"
@@ -181,7 +118,7 @@ export default function SobreContent() {
 
       <div className="border-b border-black/20 py-7">
         <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
-          {labels.commitment}
+          {sections.commitment}
         </div>
         <div className="grid gap-5 md:grid-cols-[1fr_420px] md:items-center md:gap-8">
           <p
@@ -196,7 +133,7 @@ export default function SobreContent() {
           >
             <Image
               src="/sobre/compromisso.png"
-              alt={lang === 'pt' ? 'Cena em preto e branco' : 'Black and white scene'}
+              alt={t.sobre.media.commitmentAlt}
               fill
               className={`object-cover transition-[filter,transform] duration-500 ease-out md:group-hover:scale-[1.02] md:group-hover:grayscale-0 ${
                 activeMedia === 'commitment' ? 'scale-[1.02] grayscale-0' : 'grayscale'
@@ -209,7 +146,7 @@ export default function SobreContent() {
 
       <div className="border-b border-black/20 py-6">
         <div className="mb-4 border-l border-black/20 pl-3 text-left text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
-          {labels.signature}
+          {sections.signature}
         </div>
         <p
           className="text-[clamp(3.003rem,6.37vw,4.732rem)] md:text-[clamp(1.802rem,3.822vw,2.839rem)] italic leading-[1.02] tracking-[-0.01em] text-[#1c1c1c]"
@@ -222,10 +159,10 @@ export default function SobreContent() {
       <div className="pt-7">
         <div className="mb-5 border-b border-black/20 pb-3">
           <p className="text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
-            {labels.team}
+            {sections.team}
           </p>
           <p className="mt-2 text-[0.91rem] font-semibold uppercase tracking-[0.11em] text-[#242424]/70">
-            {labels.heading}
+            {sections.heading}
           </p>
         </div>
         <div className="grid gap-5 md:grid-cols-3">

@@ -11,7 +11,7 @@ import { urlFor } from '@/sanity/lib/image'
 import type { ElencoListItem, ElencoProfile, ElencoTipo } from '@/types/elenco'
 import ElencoDownloadButton from '@/components/ElencoDownloadButton'
 import ElencoProfileInfo from '@/components/ElencoProfileInfo'
-import HireForm from '@/components/HireForm'
+import LocalizedHireForm from '@/components/LocalizedHireForm'
 import { portableTextToPlain } from '@/lib/portableTextToPlain'
 
 export const revalidate = 60
@@ -96,7 +96,7 @@ export default async function ElencoProfilePage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <HireForm artistName={artist.nome} />
+      <LocalizedHireForm nome={artist.nome} nomeEn={artist.nomeEn} />
 
       <ElencoDownloadButton artist={artist} />
     </main>

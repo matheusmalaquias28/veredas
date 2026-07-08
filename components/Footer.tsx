@@ -28,7 +28,7 @@ export default function Footer({ instagramUrl }: { instagramUrl?: string | null 
     { href: '/elenco/atores', label: t.nav.atores },
     { href: '/elenco/atrizes', label: t.nav.atrizes },
     { href: '/criativos', label: t.nav.criativos },
-    { href: '/elenco/estrangeiros', label: 'Internacionais' },
+    { href: '/elenco/estrangeiros', label: t.nav.estrangeiros },
   ] as const
 
   return (

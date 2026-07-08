@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { PortableText } from 'next-sanity'
 import { urlFor } from '@/sanity/lib/image'
-import type { Criativo } from '@/types/criativo'
+import { useLocalizedField } from '@/hooks/useLocalizedField'
+import { hasCmsContent } from '@/lib/localizedContent'
 import { profilePortableTextComponents } from '@/components/portableTextComponents'
+import type { Criativo } from '@/types/criativo'
 
 interface Props {
   criativo: Criativo
@@ -16,6 +18,11 @@ interface Props {
 }
 
 export default function CriativoModal({ criativo, isSelected, onClose, onSelect }: Props) {
+  const { string, content } = useLocalizedField()
+  const nome = string(criativo.nome, criativo.nomeEn)
+  const funcao = string(criativo.funcao, criativo.funcaoEn)
+  const biografiaCurta = content(criativo.biografiaCurta, criativo.biografiaCurtaEn)
+
   const imageUrl = criativo.fotoPrincipal?.asset
     ? urlFor(criativo.fotoPrincipal).width(800).height(1067).fit('crop').url()
     : null
@@ -45,7 +52,7 @@ export default function CriativoModal({ criativo, isSelected, onClose, onSelect 
             {imageUrl ? (
               <Image
                 src={imageUrl}
-                alt={criativo.nome}
+                alt={nome}
                 fill
                 className="object-cover"
                 sizes="(max-width: 767px) 100vw, 45vw"
@@ -69,12 +76,12 @@ export default function CriativoModal({ criativo, isSelected, onClose, onSelect 
             </button>
 
             {/* Função */}
-            {criativo.funcao && (
+            {funcao && (
               <p
                 className="mb-2 font-semibold uppercase"
                 style={{ fontSize: '0.65rem', letterSpacing: '0.22em', color: '#4277f6' }}
               >
-                {criativo.funcao}
+                {funcao}
               </p>
             )}
 
@@ -89,22 +96,27 @@ export default function CriativoModal({ criativo, isSelected, onClose, onSelect 
                 letterSpacing: '0.01em',
               }}
             >
-              {criativo.nome}
+              {nome}
             </h2>
 
             {/* Divider */}
             <div className="my-6 h-px bg-neutral-100" />
 
             {/* Bio */}
-            {criativo.biografiaCurta && (
+            {hasCmsContent(biografiaCurta) && (
               <div
                 className="leading-relaxed text-neutral-500"
                 style={{ fontSize: '0.9rem' }}
               >
-                <PortableText
-                  value={criativo.biografiaCurta}
-                  components={profilePortableTextComponents}
-                />
+                {typeof biografiaCurta === 'string' ? (
+                  <p>{biografiaCurta}</p>
+                ) : (
+                  <PortableText
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    value={biografiaCurta as any}
+                    components={profilePortableTextComponents}
+                  />
+                )}
               </div>
             )}
 

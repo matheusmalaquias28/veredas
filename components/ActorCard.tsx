@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { urlFor } from '@/sanity/lib/image'
+import { useLocalizedField } from '@/hooks/useLocalizedField'
 
 type ElencoTipo = 'ator' | 'atriz' | 'estrangeiro'
 
@@ -14,11 +17,15 @@ interface Ator {
   _id: string
   _type: ElencoTipo
   nome: string
+  nomeEn?: string | null
   slug: { current: string }
   fotoPrincipal: { asset: { _ref: string } }
 }
 
 export default function ActorCard({ ator }: { ator: Ator }) {
+  const { string } = useLocalizedField()
+  const nome = string(ator.nome, ator.nomeEn)
+
   const imageUrl = ator.fotoPrincipal?.asset
     ? urlFor(ator.fotoPrincipal).width(900).fit('max').url()
     : null
@@ -33,7 +40,7 @@ export default function ActorCard({ ator }: { ator: Ator }) {
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={ator.nome}
+            alt={nome}
             fill
             sizes="(max-width: 767px) 85vw, 34vw"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -61,7 +68,7 @@ export default function ActorCard({ ator }: { ator: Ator }) {
               lineHeight: 1.2,
             }}
           >
-            {ator.nome}
+            {nome}
           </p>
           <p
             className="mt-1 font-semibold"

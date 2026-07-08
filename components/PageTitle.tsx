@@ -10,7 +10,7 @@ const DEFAULT_PAGE_TITLE_SIZE = 'clamp(3.5rem, 8vw, 7rem)'
 
 export default function PageTitle({ pageKey }: { pageKey: PageKey }) {
   const router = useRouter()
-  const { lang, translations: t } = useLang()
+  const { translations: t } = useLang()
   const titleFontSize =
     pageKey === 'sobre' ? DEFAULT_PAGE_TITLE_SIZE : LIST_PAGE_TITLE_SIZE
   return (
@@ -21,7 +21,7 @@ export default function PageTitle({ pageKey }: { pageKey: PageKey }) {
         className="mb-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-[#4277f6] transition-opacity hover:opacity-80"
       >
         <span aria-hidden>←</span>
-        <span>{lang === 'pt' ? 'Voltar' : 'Back'}</span>
+        <span>{t.nav.back}</span>
       </button>
       <h1
         style={{

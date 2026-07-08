@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useLang } from '@/contexts/LanguageContext'
 import type { ParsedVideo } from '@/lib/videoUrl'
 
 type VideoPopupModalProps = {
@@ -13,6 +14,8 @@ type VideoPopupModalProps = {
 }
 
 export default function VideoPopupModal({ open, onClose, video, title }: VideoPopupModalProps) {
+  const { translations: t } = useLang()
+  const modalTitle = title ?? t.videoModal.defaultTitle
   useEffect(() => {
     if (!open) return
 
@@ -38,7 +41,7 @@ export default function VideoPopupModal({ open, onClose, video, title }: VideoPo
         <>
           <motion.button
             type="button"
-            aria-label="Fechar vídeo"
+            aria-label={t.videoModal.closeVideoAria}
             className="fixed inset-0 z-[250] cursor-default bg-black/88 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -49,7 +52,7 @@ export default function VideoPopupModal({ open, onClose, video, title }: VideoPo
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={title ?? 'Vídeo'}
+            aria-label={modalTitle}
             className="fixed inset-0 z-[251] flex items-center justify-center p-4 md:p-10"
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -61,7 +64,7 @@ export default function VideoPopupModal({ open, onClose, video, title }: VideoPo
                 type="button"
                 onClick={onClose}
                 className="absolute -top-12 right-0 flex h-10 w-10 items-center justify-center text-white/80 transition-colors hover:text-white md:-right-2 md:-top-14"
-                aria-label="Fechar"
+                aria-label={t.actions.fechar}
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
                   <path d="M2 2l16 16M18 2L2 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -82,7 +85,7 @@ export default function VideoPopupModal({ open, onClose, video, title }: VideoPo
                   <iframe
                     key={video.embedUrl}
                     src={video.embedUrl}
-                    title={title ?? 'Vídeo'}
+                    title={modalTitle}
                     allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-write"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"

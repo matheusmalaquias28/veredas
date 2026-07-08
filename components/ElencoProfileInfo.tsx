@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { PortableText } from 'next-sanity'
 import { useLang } from '@/contexts/LanguageContext'
+import { useLocalizedField } from '@/hooks/useLocalizedField'
+import { hasCmsContent } from '@/lib/localizedContent'
 import { profilePortableTextComponents } from '@/components/portableTextComponents'
 import { formatAge } from '@/lib/ageFromBirthYear'
 import type { ElencoProfile, ElencoTipo } from '@/types/elenco'
@@ -17,18 +19,23 @@ function listHref(tipo: ElencoTipo) {
 
 export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile }) {
   const { lang, translations: t } = useLang()
+  const { string, content } = useLocalizedField()
   const tipo = artist._type as ElencoTipo
   const backHref = listHref(tipo)
+
+  const nome = string(artist.nome, artist.nomeEn)
+  const funcao = string(artist.funcao, artist.funcaoEn)
+  const biografia = content(artist.biografia, artist.biografiaEn)
 
   return (
     <div className="flex flex-1 flex-col px-8 pb-24 pt-28 md:px-14 md:pb-32 md:pt-32">
       <div>
-        {artist.funcao && (
+        {funcao && (
           <p
             className="mb-2 font-semibold uppercase md:mb-3"
             style={{ fontSize: '0.56rem', letterSpacing: '0.22em', color: '#4277f6' }}
           >
-            {artist.funcao}
+            {funcao}
           </p>
         )}
         <h1
@@ -41,7 +48,7 @@ export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile })
             letterSpacing: '0.01em',
           }}
         >
-          {artist.nome}
+          {nome}
         </h1>
       </div>
 
@@ -76,18 +83,18 @@ export default function ElencoProfileInfo({ artist }: { artist: ElencoProfile })
       </div>
 
       {/* Biografia */}
-      {artist.biografia && (
+      {hasCmsContent(biografia) && (
         <>
           <div className="my-8 h-px bg-white/10" />
-          {typeof artist.biografia === 'string' ? (
+          {typeof biografia === 'string' ? (
             <p className="max-w-[52ch] leading-relaxed text-neutral-300" style={{ fontSize: '0.95rem' }}>
-              {artist.biografia}
+              {biografia}
             </p>
           ) : (
             <div className="max-w-[52ch] leading-relaxed text-neutral-300" style={{ fontSize: '0.95rem' }}>
               <PortableText
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                value={artist.biografia as any}
+                value={biografia as any}
                 components={profilePortableTextComponents}
               />
             </div>

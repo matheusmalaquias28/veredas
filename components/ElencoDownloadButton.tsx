@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { localizeElencoProfile } from '@/lib/localizeElenco'
 import { formatAge } from '@/lib/ageFromBirthYear'
 import type { ElencoProfile } from '@/types/elenco'
 
@@ -35,7 +36,15 @@ function bioToString(biografia: unknown): string {
   return ''
 }
 
-async function generatePDF(artist: ElencoProfile) {
+async function generatePDF(
+  artist: ElencoProfile,
+  copy: {
+    brand: string
+    tagline: string
+    labels: { idade: string; altura: string; local: string; idiomas: string }
+  },
+  lang: 'pt' | 'en'
+) {
   const { default: jsPDF } = await import('jspdf')
 
   const doc = new jsPDF('p', 'mm', 'a4')
@@ -49,10 +58,10 @@ async function generatePDF(artist: ElencoProfile) {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(7)
   doc.setTextColor(255, 255, 255)
-  doc.text('VEREDAS', mg, 8)
+  doc.text(copy.brand, mg, 8)
   doc.setFont('helvetica', 'normal')
   doc.setTextColor(66, 119, 246)
-  doc.text('AGENCIAMENTO ARTÍSTICO', mg + 22, 8)
+  doc.text(copy.tagline, mg + 22, 8)
 
   // ── Função ───────────────────────────────────────────────────
   doc.setFont('helvetica', 'normal')
@@ -99,10 +108,10 @@ async function generatePDF(artist: ElencoProfile) {
   let y = photoY
 
   const dados: { label: string; valor: string }[] = []
-  if (artist.anoNascimento) dados.push({ label: 'Idade', valor: formatAge(artist.anoNascimento) })
-  if (artist.altura) dados.push({ label: 'Altura', valor: artist.altura })
-  if (artist.cidadeEstado) dados.push({ label: 'Naturalidade', valor: artist.cidadeEstado })
-  if (artist.idiomas?.length) dados.push({ label: 'Idiomas', valor: artist.idiomas.join(', ') })
+  if (artist.anoNascimento) dados.push({ label: copy.labels.idade, valor: formatAge(artist.anoNascimento, lang) })
+  if (artist.altura) dados.push({ label: copy.labels.altura, valor: artist.altura })
+  if (artist.cidadeEstado) dados.push({ label: copy.labels.local, valor: artist.cidadeEstado })
+  if (artist.idiomas?.length) dados.push({ label: copy.labels.idiomas, valor: artist.idiomas.join(', ') })
 
   for (const d of dados) {
     doc.setFont('helvetica', 'bold')
@@ -140,7 +149,7 @@ async function generatePDF(artist: ElencoProfile) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(6)
     doc.setTextColor(255, 255, 255)
-    doc.text('VEREDAS', mg, 5.5)
+    doc.text(copy.brand, mg, 5.5)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(66, 119, 246)
     doc.text(artist.nome.toUpperCase(), mg + 18, 5.5)
@@ -197,12 +206,16 @@ async function generatePDF(artist: ElencoProfile) {
 
 export default function ElencoDownloadButton({ artist }: { artist: ElencoProfile }) {
   const [loading, setLoading] = useState(false)
-  const { translations: t } = useLang()
+  const { translations: t, lang } = useLang()
 
   const handleClick = async () => {
     setLoading(true)
     try {
-      await generatePDF(artist)
+      await generatePDF(
+        localizeElencoProfile(artist, lang),
+        { brand: t.pdf.brand, tagline: t.pdf.tagline, labels: t.labels },
+        lang
+      )
     } finally {
       setLoading(false)
     }
@@ -212,7 +225,7 @@ export default function ElencoDownloadButton({ artist }: { artist: ElencoProfile
     <button
       onClick={handleClick}
       disabled={loading}
-      aria-label="Baixar PDF"
+      aria-label={t.actions.baixarPdf}
       className="fixed bottom-8 right-8 z-[100] flex h-12 items-center gap-3 rounded-full px-6 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
       style={{ background: '#db260e', color: '#fff' }}
     >

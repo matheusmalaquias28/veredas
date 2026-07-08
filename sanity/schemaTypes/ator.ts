@@ -17,6 +17,12 @@ const camposComuns = [
     validation: (rule) => rule.required(),
   }),
   defineField({
+    name: 'nomeEn',
+    title: 'Nome (inglês)',
+    description: 'Opcional. Se vazio, o site mantém o nome em português.',
+    type: 'string',
+  }),
+  defineField({
     name: 'destaque',
     title: 'Destaque na Home',
     type: 'boolean',
@@ -37,10 +43,17 @@ const camposComuns = [
     validation: (rule) => rule.max(4),
   }),
   richTextField('biografia', 'Biografia'),
+  richTextField('biografiaEn', 'Biografia (inglês)', 'Opcional. Se vazio, mantém a biografia em português.'),
   defineField({
     name: 'funcao',
     title: 'Função',
     description: 'Ex: Fotógrafo, Diretor, Modelo',
+    type: 'string',
+  }),
+  defineField({
+    name: 'funcaoEn',
+    title: 'Função (inglês)',
+    description: 'Opcional. Ex: Photographer, Director, Model',
     type: 'string',
   }),
   defineField({

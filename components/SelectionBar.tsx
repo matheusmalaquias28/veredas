@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { localizeCriativo } from '@/lib/localizeCriativo'
 import type { Criativo } from '@/types/criativo'
 import { portableTextToPlain } from '@/lib/portableTextToPlain'
 
@@ -21,7 +22,10 @@ async function blobToBase64(blob: Blob): Promise<string> {
   })
 }
 
-async function generatePDF(criativos: Criativo[]) {
+async function generatePDF(
+  criativos: Criativo[],
+  copy: { brand: string; tagline: string; siteLabel: string; instagramLabel: string }
+) {
   const { default: jsPDF } = await import('jspdf')
 
   const doc = new jsPDF('p', 'mm', 'a4')
@@ -41,10 +45,10 @@ async function generatePDF(criativos: Criativo[]) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(7)
     doc.setTextColor(255, 255, 255)
-    doc.text('VEREDAS', mg, 8)
+    doc.text(copy.brand, mg, 8)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(66, 119, 246)
-    doc.text('AGENCIAMENTO ARTÍSTICO', mg + 22, 8)
+    doc.text(copy.tagline, mg + 22, 8)
 
     // Função
     doc.setFont('helvetica', 'normal')
@@ -111,7 +115,7 @@ async function generatePDF(criativos: Criativo[]) {
       doc.setTextColor(36, 36, 36)
 
       if (c.site) {
-        doc.text('SITE', infoX, infoY)
+        doc.text(copy.siteLabel, infoX, infoY)
         doc.setFont('helvetica', 'normal')
         doc.setTextColor(100, 100, 100)
         doc.text(c.site.replace(/^https?:\/\//, ''), infoX + 12, infoY)
@@ -120,7 +124,7 @@ async function generatePDF(criativos: Criativo[]) {
         doc.setTextColor(36, 36, 36)
       }
       if (c.instagram) {
-        doc.text('IG', infoX, infoY)
+        doc.text(copy.instagramLabel, infoX, infoY)
         doc.setFont('helvetica', 'normal')
         doc.setTextColor(100, 100, 100)
         doc.text(`@${c.instagram}`, infoX + 12, infoY)
@@ -141,12 +145,19 @@ async function generatePDF(criativos: Criativo[]) {
 
 export default function SelectionBar({ criativos, onRemove }: Props) {
   const [loading, setLoading] = useState(false)
-  const { translations: t } = useLang()
+  const { translations: t, lang } = useLang()
 
   const handlePDF = async () => {
     setLoading(true)
     try {
-      await generatePDF(criativos)
+      await generatePDF(
+        criativos.map((c) => localizeCriativo(c, lang)),
+        {
+        brand: t.pdf.brand,
+        tagline: t.pdf.tagline,
+        siteLabel: t.pdf.siteLabel,
+        instagramLabel: t.pdf.instagramLabel,
+      })
     } finally {
       setLoading(false)
     }
@@ -168,17 +179,19 @@ export default function SelectionBar({ criativos, onRemove }: Props) {
             {criativos.length} {criativos.length === 1 ? t.selectionBar.selecionado : t.selectionBar.selecionados}
           </p>
           <div className="flex flex-wrap gap-x-3 gap-y-1">
-            {criativos.map((c) => (
+            {criativos.map((c) => {
+              const nome = localizeCriativo(c, lang).nome
+              return (
               <button
                 key={c._id}
                 onClick={() => onRemove(c._id)}
                 className="group flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors"
-                title="Remover"
+                title={t.selectionBar.remover}
               >
-                <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>{c.nome}</span>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>{nome}</span>
                 <span className="text-white/30 group-hover:text-white/70 text-xs leading-none">×</span>
               </button>
-            ))}
+            )})}
           </div>
         </div>
 

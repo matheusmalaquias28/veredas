@@ -23,11 +23,23 @@ export const criativoType = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'nomeEn',
+      title: 'Nome (inglês)',
+      description: 'Opcional. Se vazio, o site mantém o nome em português.',
+      type: 'string',
+    }),
+    defineField({
       name: 'funcao',
       title: 'Função',
       type: 'string',
       description: 'Ex: Diretor, Roteirista, Diretor de Arte…',
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'funcaoEn',
+      title: 'Função (inglês)',
+      description: 'Opcional. Ex: Director, Screenwriter, Art Director…',
+      type: 'string',
     }),
     defineField({
       name: 'fotoPrincipal',
@@ -37,8 +49,14 @@ export const criativoType = defineType({
     }),
 
     richTextField('biografiaCurta', 'Biografia Curta', 'Aparece nos cards e no topo do perfil.'),
+    richTextField(
+      'biografiaCurtaEn',
+      'Biografia Curta (inglês)',
+      'Opcional. Se vazio, mantém a versão em português.'
+    ),
 
     richTextField('bloco1', 'Bloco de Texto 1'),
+    richTextField('bloco1En', 'Bloco de Texto 1 (inglês)', 'Opcional.'),
     defineField({
       name: 'galeria1',
       title: 'Galeria 1',
@@ -47,6 +65,7 @@ export const criativoType = defineType({
     }),
 
     richTextField('bloco2', 'Bloco de Texto 2'),
+    richTextField('bloco2En', 'Bloco de Texto 2 (inglês)', 'Opcional.'),
     defineField({
       name: 'galeria2',
       title: 'Galeria 2',
@@ -55,6 +74,7 @@ export const criativoType = defineType({
     }),
 
     richTextField('bloco3', 'Bloco de Texto 3'),
+    richTextField('bloco3En', 'Bloco de Texto 3 (inglês)', 'Opcional.'),
     defineField({
       name: 'galeria3',
       title: 'Galeria 3',

@@ -6,6 +6,7 @@ import { client } from '@/sanity/lib/client'
 import { ELENCO_BY_SLUG_QUERY } from '@/sanity/lib/queries'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { localizeElencoListItem, localizeElencoProfile } from '@/lib/localizeElenco'
 import { formatAge } from '@/lib/ageFromBirthYear'
 import type { ElencoListItem, ElencoProfile } from '@/types/elenco'
 
@@ -24,7 +25,15 @@ async function blobToBase64(blob: Blob): Promise<string> {
   })
 }
 
-async function generatePDF(artists: ElencoListItem[]) {
+async function generatePDF(
+  artists: ElencoListItem[],
+  copy: {
+    brand: string
+    tagline: string
+    labels: { idade: string; altura: string; local: string; idiomas: string }
+  },
+  lang: 'pt' | 'en'
+) {
   const { default: jsPDF } = await import('jspdf')
 
   // Busca dados completos de cada artista
@@ -40,6 +49,7 @@ async function generatePDF(artists: ElencoListItem[]) {
   for (let i = 0; i < profiles.length; i++) {
     const p = profiles[i]
     if (!p) continue
+    const localized = localizeElencoProfile(p, lang)
     if (i > 0) doc.addPage()
 
     // Header
@@ -48,22 +58,22 @@ async function generatePDF(artists: ElencoListItem[]) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(7)
     doc.setTextColor(255, 255, 255)
-    doc.text('VEREDAS', mg, 8)
+    doc.text(copy.brand, mg, 8)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(66, 119, 246)
-    doc.text('AGENCIAMENTO ARTÍSTICO', mg + 22, 8)
+    doc.text(copy.tagline, mg + 22, 8)
 
     // Função
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
     doc.setTextColor(66, 119, 246)
-    doc.text((p.funcao ?? '').toUpperCase(), mg, 28)
+    doc.text((localized.funcao ?? '').toUpperCase(), mg, 28)
 
     // Nome
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(26)
     doc.setTextColor(36, 36, 36)
-    doc.text(p.nome.toUpperCase(), mg, 40)
+    doc.text(localized.nome.toUpperCase(), mg, 40)
 
     // Divider
     doc.setDrawColor(220, 220, 220)
@@ -99,10 +109,10 @@ async function generatePDF(artists: ElencoListItem[]) {
 
     // Dados
     const dados: { label: string; valor: string }[] = []
-    if (p.anoNascimento) dados.push({ label: 'Idade', valor: formatAge(p.anoNascimento) })
-    if (p.altura) dados.push({ label: 'Altura', valor: p.altura })
-    if (p.cidadeEstado) dados.push({ label: 'Local', valor: p.cidadeEstado })
-    if (p.idiomas?.length) dados.push({ label: 'Idiomas', valor: p.idiomas.join(', ') })
+    if (p.anoNascimento) dados.push({ label: copy.labels.idade, valor: formatAge(p.anoNascimento, lang) })
+    if (p.altura) dados.push({ label: copy.labels.altura, valor: p.altura })
+    if (p.cidadeEstado) dados.push({ label: copy.labels.local, valor: p.cidadeEstado })
+    if (p.idiomas?.length) dados.push({ label: copy.labels.idiomas, valor: p.idiomas.join(', ') })
 
     for (const d of dados) {
       doc.setFont('helvetica', 'bold')
@@ -116,7 +126,7 @@ async function generatePDF(artists: ElencoListItem[]) {
     }
 
     // Biografia
-    if (p.biografia) {
+    if (localized.biografia) {
       y += 4
       doc.setDrawColor(220, 220, 220)
       doc.line(infoX, y, infoX + infoW, y)
@@ -124,10 +134,10 @@ async function generatePDF(artists: ElencoListItem[]) {
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(9)
       doc.setTextColor(80, 80, 80)
-      const bioText = typeof p.biografia === 'string'
-        ? p.biografia
-        : Array.isArray(p.biografia)
-          ? (p.biografia as { children?: { text?: string }[] }[])
+      const bioText = typeof localized.biografia === 'string'
+        ? localized.biografia
+        : Array.isArray(localized.biografia)
+          ? (localized.biografia as { children?: { text?: string }[] }[])
               .map((b) => b.children?.map((c) => c.text).join('') ?? '')
               .join('\n')
           : ''
@@ -178,13 +188,17 @@ async function generatePDF(artists: ElencoListItem[]) {
 
 export default function ElencoSelectionBar({ artists, onRemove, onClear }: Props) {
   const [loading, setLoading] = useState(false)
-  const { translations: t } = useLang()
+  const { translations: t, lang } = useLang()
   const selectedLabel = `${artists.length} ${artists.length === 1 ? t.selectionBar.selecionado : t.selectionBar.selecionados}`
 
   const handlePDF = async () => {
     setLoading(true)
     try {
-      await generatePDF(artists)
+      await generatePDF(
+        artists,
+        { brand: t.pdf.brand, tagline: t.pdf.tagline, labels: t.labels },
+        lang
+      )
     } finally {
       setLoading(false)
     }
@@ -206,18 +220,20 @@ export default function ElencoSelectionBar({ artists, onRemove, onClear }: Props
             {selectedLabel}
           </p>
           <div className="flex flex-wrap gap-x-3 gap-y-1">
-            {artists.map((a) => (
+            {artists.map((a) => {
+              const nome = localizeElencoListItem(a, lang).nome
+              return (
               <button
                 key={a._id}
                 type="button"
                 onClick={() => onRemove(a._id)}
                 className="group flex items-center gap-1.5 text-sm text-white/80 transition-colors hover:text-white"
-                title="Remover"
+                title={t.selectionBar.remover}
               >
-                <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>{a.nome}</span>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem' }}>{nome}</span>
                 <span className="text-xs leading-none text-white/30 group-hover:text-white/70">×</span>
               </button>
-            ))}
+            )})}
           </div>
         </div>
 

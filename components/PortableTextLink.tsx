@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { parseVideoUrl } from '@/lib/videoUrl'
+import { useLang } from '@/contexts/LanguageContext'
 import VideoPopupModal from '@/components/VideoPopupModal'
 
 type PortableTextLinkProps = {
@@ -12,6 +13,7 @@ type PortableTextLinkProps = {
 
 export default function PortableTextLink({ value, children, className }: PortableTextLinkProps) {
   const [open, setOpen] = useState(false)
+  const { translations: t } = useLang()
   const href = value?.href
   const video = href ? parseVideoUrl(href) : null
 
@@ -20,7 +22,7 @@ export default function PortableTextLink({ value, children, className }: Portabl
   }
 
   if (video) {
-    const label = typeof children === 'string' ? children : 'Abrir vídeo'
+    const label = typeof children === 'string' ? children : t.videoModal.openVideo
 
     return (
       <>

@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useLayoutEffect, useMemo } from 'reac
 import { AnimatePresence } from 'framer-motion'
 import CriativoCard from './CriativoCard'
 import SelectionBar from './SelectionBar'
+import { useLang } from '@/contexts/LanguageContext'
 import type { Criativo } from '@/types/criativo'
 
 function chunk<T>(arr: T[], size: number): T[][] {
@@ -32,6 +33,7 @@ function useGridCols() {
 }
 
 export default function CriativosGrid({ criativos }: { criativos: Criativo[] }) {
+  const { translations: t } = useLang()
   const { cols, isMobile } = useGridCols()
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -68,7 +70,7 @@ export default function CriativosGrid({ criativos }: { criativos: Criativo[] }) 
     <>
       {criativos.length === 0 ? (
         <p className="py-20 text-center text-sm text-neutral-400">
-          Nenhum criativo cadastrado ainda.
+          {t.actions.nenhumCriativo}
         </p>
       ) : (
         <div

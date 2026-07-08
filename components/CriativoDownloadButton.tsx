@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { urlFor } from '@/sanity/lib/image'
 import { useLang } from '@/contexts/LanguageContext'
+import { localizeCriativo } from '@/lib/localizeCriativo'
 import type { Criativo } from '@/types/criativo'
 import { portableTextToPlain } from '@/lib/portableTextToPlain'
 
@@ -24,7 +25,10 @@ function getImageNaturalSize(src: string): Promise<{ w: number; h: number }> {
   })
 }
 
-async function generateCriativoPDF(c: Criativo) {
+async function generateCriativoPDF(
+  c: Criativo,
+  copy: { brand: string; tagline: string; siteLabel: string; instagramLabel: string }
+) {
   const { default: jsPDF } = await import('jspdf')
 
   const doc = new jsPDF('p', 'mm', 'a4')
@@ -39,11 +43,11 @@ async function generateCriativoPDF(c: Criativo) {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(7)
   doc.setTextColor(255, 255, 255)
-  doc.text('VEREDAS', mg, 8)
+  doc.text(copy.brand, mg, 8)
 
   doc.setFont('helvetica', 'normal')
   doc.setTextColor(66, 119, 246)
-  doc.text('AGENCIAMENTO ARTÍSTICO', mg + 22, 8)
+  doc.text(copy.tagline, mg + 22, 8)
 
   // ── Função ───────────────────────────────────────────────────
   doc.setFont('helvetica', 'normal')
@@ -127,7 +131,7 @@ async function generateCriativoPDF(c: Criativo) {
     doc.setTextColor(36, 36, 36)
 
     if (c.site) {
-      doc.text('SITE', mg, lY)
+      doc.text(copy.siteLabel, mg, lY)
       doc.setFont('helvetica', 'normal')
       doc.setTextColor(100, 100, 100)
       doc.text(c.site.replace(/^https?:\/\//, ''), mg + 12, lY)
@@ -136,7 +140,7 @@ async function generateCriativoPDF(c: Criativo) {
     if (c.instagram) {
       doc.setFont('helvetica', 'bold')
       doc.setTextColor(36, 36, 36)
-      doc.text('IG', mg, lY)
+      doc.text(copy.instagramLabel, mg, lY)
       doc.setFont('helvetica', 'normal')
       doc.setTextColor(100, 100, 100)
       doc.text(`@${c.instagram}`, mg + 12, lY)
@@ -159,7 +163,7 @@ async function generateCriativoPDF(c: Criativo) {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(6)
     doc.setTextColor(255, 255, 255)
-    doc.text('VEREDAS', mg, 5.5)
+    doc.text(copy.brand, mg, 5.5)
     doc.setFont('helvetica', 'normal')
     doc.setTextColor(66, 119, 246)
     doc.text(c.nome.toUpperCase(), mg + 18, 5.5)
@@ -226,12 +230,17 @@ async function generateCriativoPDF(c: Criativo) {
 
 export default function CriativoDownloadButton({ criativo }: { criativo: Criativo }) {
   const [loading, setLoading] = useState(false)
-  const { translations: t } = useLang()
+  const { translations: t, lang } = useLang()
 
   const handleClick = async () => {
     setLoading(true)
     try {
-      await generateCriativoPDF(criativo)
+      await generateCriativoPDF(localizeCriativo(criativo, lang), {
+        brand: t.pdf.brand,
+        tagline: t.pdf.tagline,
+        siteLabel: t.pdf.siteLabel,
+        instagramLabel: t.pdf.instagramLabel,
+      })
     } finally {
       setLoading(false)
     }
@@ -241,8 +250,8 @@ export default function CriativoDownloadButton({ criativo }: { criativo: Criativ
     <button
       onClick={handleClick}
       disabled={loading}
-      aria-label="Baixar PDF"
-      title="Baixar PDF"
+      aria-label={t.actions.baixarPdf}
+      title={t.actions.baixarPdf}
       className="fixed bottom-8 right-8 z-[100] flex h-12 items-center gap-3 rounded-full px-6 shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50"
       style={{ background: '#db260e', color: '#fff' }}
     >

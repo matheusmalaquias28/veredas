@@ -24,7 +24,7 @@ export default function CriativoModal({ criativo, isSelected, onClose, onSelect 
   const biografiaCurta = content(criativo.biografiaCurta, criativo.biografiaCurtaEn)
 
   const imageUrl = criativo.fotoPrincipal?.asset
-    ? urlFor(criativo.fotoPrincipal).width(800).height(1067).fit('crop').url()
+    ? urlFor(criativo.fotoPrincipal).width(800).fit('max').auto('format').url()
     : null
 
   return (
@@ -48,13 +48,13 @@ export default function CriativoModal({ criativo, isSelected, onClose, onSelect 
       >
         <div className="flex h-full flex-col md:flex-row">
           {/* Image — left */}
-          <div className="relative h-64 w-full shrink-0 md:h-full md:w-[45%]">
+          <div className="relative h-64 w-full shrink-0 bg-black md:h-full md:w-[45%]">
             {imageUrl ? (
               <Image
                 src={imageUrl}
                 alt={nome}
                 fill
-                className="object-cover"
+                className="object-contain object-center"
                 sizes="(max-width: 767px) 100vw, 45vw"
               />
             ) : (

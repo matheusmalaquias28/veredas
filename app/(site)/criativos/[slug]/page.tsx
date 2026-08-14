@@ -33,13 +33,9 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
   const criativo: Criativo | null = await client.fetch(CRIATIVO_BY_SLUG_QUERY, { slug })
   if (!criativo) notFound()
 
-  const heroDims = criativo.heroDimensions
-  const heroAspectW = heroDims?.width ?? 3
-  const heroAspectH = heroDims?.height ?? 4
-
   const heroUrl =
     criativo.fotoPrincipal?.asset?._ref
-      ? urlFor(criativo.fotoPrincipal).width(1920).fit('max').quality(90).url()
+      ? urlFor(criativo.fotoPrincipal).width(1920).fit('max').auto('format').quality(90).url()
       : null
 
   return (
@@ -47,30 +43,20 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
       <CriativoBackLink />
 
       {/* Hero full-bleed */}
-      <section className="relative h-[50svh] min-h-[50svh] w-full overflow-hidden bg-black md:h-[100svh] md:min-h-[100svh]">
+      <section className="relative flex min-h-[50svh] w-full items-center justify-center overflow-hidden bg-black md:min-h-[100svh]">
         {heroUrl ? (
-          <div className="absolute inset-0 flex items-start justify-center">
-            <div
-              className="relative h-full w-auto max-w-full shrink-0"
-              style={{ aspectRatio: `${heroAspectW} / ${heroAspectH}` }}
-            >
-              <Image
-                src={heroUrl}
-                alt={criativo.nome}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover"
-              />
+          <div className="relative h-[50svh] w-full md:h-[100svh]">
+            <Image
+              src={heroUrl}
+              alt={criativo.nome}
+              fill
+              priority
+              sizes="100vw"
+              className="object-contain object-center"
+            />
 
-              {/* Mescla nas bordas da imagem */}
-              <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
-                <div className="absolute inset-y-0 left-0 w-[22%] bg-gradient-to-r from-black to-transparent" />
-                <div className="absolute inset-y-0 right-0 w-[22%] bg-gradient-to-l from-black to-transparent" />
-                <div className="absolute inset-x-0 top-0 h-[14%] bg-gradient-to-b from-black to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-t from-black via-black/80 to-transparent" />
-              </div>
-            </div>
+            {/* Mescla inferior para legibilidade do título */}
+            <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[38%] bg-gradient-to-t from-black via-black/80 to-transparent" />
           </div>
         ) : (
           <div className="absolute inset-0 bg-neutral-900" />
@@ -82,7 +68,7 @@ export default async function CriativoPage({ params }: { params: Promise<{ slug:
           className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[65%] bg-gradient-to-t from-black via-black/60 to-transparent md:h-[52%]"
         />
 
-        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px] flex-col items-center justify-end px-6 pb-4 text-center md:px-14 md:pb-12">
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px] flex-col items-center justify-end px-6 pb-4 text-center md:absolute md:inset-0 md:px-14 md:pb-12">
           <CriativoProfileHeroText criativo={criativo} />
         </div>
       </section>

@@ -81,19 +81,19 @@ function PortableBlock({
 function Gallery({ images }: { images: any[] }) {
   if (!images?.length) return null
   return (
-    <div className="mx-auto w-[78%] min-w-0 max-w-full">
-      <div className="grid grid-cols-2 gap-4 md:flex md:flex-row md:items-center md:gap-4">
+    <div className="mx-auto w-full min-w-0 max-w-full">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-4">
         {images.map((img, i) => {
-          const url = img?.asset ? urlFor(img).width(1560).height(2080).fit('crop').url() : null
+          const url = img?.asset ? urlFor(img).width(1200).fit('max').auto('format').url() : null
           if (!url) return null
           return (
-            <div key={i} className="relative aspect-[3/4] w-full overflow-hidden md:flex-1">
+            <div key={i} className="relative aspect-[3/4] w-full overflow-hidden bg-black">
               <Image
                 src={url}
                 alt=""
                 fill
-                sizes="(max-width: 767px) 39vw, 24vw"
-                className="object-cover"
+                sizes="(max-width: 767px) 45vw, 30vw"
+                className="object-contain object-center"
               />
             </div>
           )

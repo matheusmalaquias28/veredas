@@ -67,7 +67,7 @@ export default function CriativoCard({
   const funcao = string(criativo.funcao, criativo.funcaoEn)
 
   const imageUrl = criativo.fotoPrincipal?.asset
-    ? urlFor(criativo.fotoPrincipal).width(800).fit('max').auto('format').url()
+    ? urlFor(criativo.fotoPrincipal).width(1200).fit('max').auto('format').url()
     : null
 
   const flexGrow = !rowHasExpanded ? 1 : isExpanded ? 3 : 1
@@ -82,7 +82,7 @@ export default function CriativoCard({
       onMouseEnter={() => !isMobile && onHover()}
     >
       <div
-        className={`relative aspect-[3/4] w-full bg-black ${isMobile && !isExpanded ? 'cursor-pointer' : ''}`}
+        className={`relative aspect-[3/4] w-full overflow-hidden ${isMobile && !isExpanded ? 'cursor-pointer' : ''}`}
         role={isMobile && !isExpanded ? 'button' : undefined}
         tabIndex={isMobile && !isExpanded ? 0 : undefined}
         onClick={(e) => {
@@ -104,7 +104,7 @@ export default function CriativoCard({
             alt={nome}
             fill
             sizes="(max-width: 767px) 45vw, 22vw"
-            className="object-contain object-center"
+            className="object-cover object-center"
             draggable={false}
             priority={false}
           />

@@ -82,7 +82,7 @@ export default function CriativoCard({
       onMouseEnter={() => !isMobile && onHover()}
     >
       <div
-        className={`relative aspect-[3/4] w-full overflow-hidden ${isMobile && !isExpanded ? 'cursor-pointer' : ''}`}
+        className={`relative h-full min-h-[clamp(264px,62.4vw,624px)] md:min-h-[clamp(336px,45.6vw,648px)] overflow-hidden ${isMobile && !isExpanded ? 'cursor-pointer' : ''}`}
         role={isMobile && !isExpanded ? 'button' : undefined}
         tabIndex={isMobile && !isExpanded ? 0 : undefined}
         onClick={(e) => {
